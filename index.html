@@ -1,496 +1,402 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Car Rental Profit Leak Audit</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-/* ===== PROFESSIONAL LIGHT THEME & FIXES ===== */
-* {
-  box-sizing: border-box; /* Fixes the slider overflow issue */
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Rental Profit Audit</title>
+    <style>
+        /* core resets */
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f1f5f9;
+            color: #334155;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
 
-body {
-  background: #f1f5f9;
-  color: #1e293b;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
+        /* wider container */
+        .app-container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 650px; 
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+            margin-top: 20px;
+        }
 
-.container {
-  max-width: 600px; /* Widened as requested */
-  margin: 40px auto;
-  padding: 20px;
-}
+        h1, h2, h3 { color: #0f172a; margin-top: 0; }
+        p { line-height: 1.6; }
 
-.step { 
-  display: none;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.3s ease;
-}
+        /* navigation steps */
+        .step { display: none; }
+        .step.active { display: block; animation: fadein 0.4s; }
+        
+        @keyframes fadein {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-.step.active { 
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-}
+        /* buttons */
+        .btn-main {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.2s;
+        }
+        .btn-main:hover { background-color: #1d4ed8; }
 
-/* Clean Professional Cards */
-.card {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e2e8f0;
-  margin-bottom: 20px;
-}
+        .btn-select {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            width: 100%;
+            padding: 20px;
+            text-align: left;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-select:hover {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
 
-h1, h2, h3 {
-  color: #0f172a;
-  margin-top: 0;
-}
+        /* inputs */
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0 25px 0;
+            accent-color: #2563eb;
+            cursor: pointer;
+        }
+        input[type="email"] {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 16px;
+        }
 
-/* Modern Inputs & Sliders */
-label {
-  font-weight: 600;
-  color: #475569;
-  margin-bottom: 8px;
-  display: block;
-}
+        /* results */
+        .leak-list {
+            margin-top: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0 15px;
+        }
+        .leak-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .leak-row:last-child { border-bottom: none; }
+        .red-text { color: #dc2626; font-weight: bold; }
 
-input[type="range"] {
-  width: 100%;
-  margin: 10px 0 20px 0;
-  cursor: pointer;
-  accent-color: #2563eb;
-}
+        /* visualization */
+        .bar-wrap {
+            height: 30px;
+            background: #e2e8f0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+            display: flex;
+        }
+        .bar-fill {
+            height: 100%;
+            background: #22c55e;
+            width: 0%;
+            transition: width 1s;
+        }
+        .bar-leak {
+            height: 100%;
+            background: #ef4444;
+            flex-grow: 1;
+        }
 
-input[type="email"] {
-  width: 100%;
-  padding: 16px;
-  border: 2px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 16px;
-  margin-bottom: 10px;
-}
+        /* blurred locked section */
+        .locked-wrapper {
+            position: relative;
+            margin-top: 30px;
+            text-align: center;
+        }
+        .blurred-bg {
+            filter: blur(6px);
+            opacity: 0.5;
+            user-select: none;
+        }
+        .lock-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            background: rgba(255,255,255,0.9);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
 
-input[type="email"]:focus {
-  outline: none;
-  border-color: #2563eb;
-}
-
-/* Action Buttons */
-button {
-  width: 100%;
-  padding: 18px;
-  background: #2563eb;
-  color: white;
-  border: none;
-  font-size: 16px;
-  font-weight: 600;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.2s;
-  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
-}
-
-button:hover {
-  background: #1d4ed8;
-  transform: translateY(-1px);
-}
-
-.option-btn {
-  text-align: left;
-  background: #f8fafc;
-  color: #1e293b;
-  border: 2px solid #e2e8f0;
-  margin-top: 12px;
-  padding: 20px;
-  box-shadow: none;
-}
-
-.option-btn:hover {
-  border-color: #2563eb;
-  background: #eff6ff;
-  transform: none;
-}
-
-/* Visualizations */
-.leak-visual {
-  margin: 30px 0;
-  padding: 20px;
-  background: #f8fafc;
-  border-radius: 12px;
-}
-
-.pipe {
-  height: 40px;
-  background: #e2e8f0;
-  border-radius: 20px;
-  overflow: hidden;
-  margin-bottom: 10px;
-}
-
-.leak-flow {
-  height: 100%;
-  background: linear-gradient(90deg, #22c55e 0%, #22c55e var(--profit-percent, 50%), #ef4444 var(--profit-percent, 50%), #ef4444 100%);
-  transition: all 1s ease;
-}
-
-.stat-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-
-/* Results List */
-.leak-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-  margin: 10px 0;
-  background: #fef2f2;
-  border-radius: 8px;
-  border-left: 4px solid #ef4444;
-}
-
-/* Blur Effect */
-.blur-content {
-  filter: blur(6px);
-  pointer-events: none;
-  user-select: none;
-}
-
-.locked-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.6);
-  z-index: 10;
-  border-radius: 16px;
-}
-
-/* Progress Bar */
-.progress {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 20px;
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  background: #cbd5e1;
-  border-radius: 50%;
-}
-
-.dot.active {
-  background: #2563eb;
-  transform: scale(1.2);
-}
-
-/* Helpers */
-.text-red { color: #ef4444; }
-.text-green { color: #22c55e; }
-.text-blue { color: #2563eb; }
-.text-muted { color: #64748b; font-size: 0.9em; font-weight: normal;}
-
-</style>
+    </style>
 </head>
 <body>
 
-<div class="container">
+<div class="app-container">
 
-  <div class="step active" id="step0">
-    <div class="card" style="text-align: center;">
-      <h1 style="font-size: 28px; margin-bottom: 15px;">🚗 Rental Profit Audit</h1>
-      <p style="font-size: 18px; color: #475569; line-height: 1.6;">
-        Most hosts lose <span class="text-red">30-40%</span> of revenue to hidden leaks. Find yours in 60 seconds.
-      </p>
-      <div style="margin: 30px 0; font-size: 14px; color: #64748b;">
-        📊 Analyzed 2,500+ businesses • 100% Free
-      </div>
-      <button onclick="nextStep()">Start Audit</button>
-    </div>
-  </div>
-
-  <div class="step" id="step1">
-    <div class="card">
-      <h2>How do you operate?</h2>
-      <button class="option-btn" onclick="setOperation('platform')">
-        <span style="font-size: 20px;">📱</span> <strong>Platform Host</strong>
-        <div class="text-muted">Turo, Getaround, SnappCar</div>
-      </button>
-      
-      <button class="option-btn" onclick="setOperation('private')">
-        <span style="font-size: 20px;">🔑</span> <strong>Private / Direct</strong>
-        <div class="text-muted">Your own website, direct bookings</div>
-      </button>
-      
-      <button class="option-btn" onclick="setOperation('beginner')">
-        <span style="font-size: 20px;">🚀</span> <strong>Planning to Start</strong>
-        <div class="text-muted">Researching profitability</div>
-      </button>
-    </div>
-    <div class="progress">
-      <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
-    </div>
-  </div>
-
-  <div class="step" id="step2">
-    <div class="card">
-      <h2>Fleet Snapshot</h2>
-      
-      <label>Number of cars: <span id="carsValue" class="text-blue">1</span></label>
-      <input type="range" id="cars" min="1" max="50" value="1" oninput="updateDisplay('cars', '', '')">
-
-      <label>Avg Daily Rate: <span id="rateValue" class="text-blue">$75</span></label>
-      <input type="range" id="rate" min="20" max="500" value="75" oninput="updateDisplay('rate', '$', '')">
-
-      <label>Booked Days / Month: <span id="daysValue" class="text-blue">15</span></label>
-      <input type="range" id="days" min="1" max="30" value="15" oninput="updateDisplay('days', '', ' days')">
-      
-      <button onclick="nextStep()">Next: Hidden Costs →</button>
-    </div>
-    <div class="progress">
-      <div class="dot"></div><div class="dot active"></div><div class="dot"></div>
-    </div>
-  </div>
-
-  <div class="step" id="step3">
-    <div class="card">
-      <h2>The Silent Killers</h2>
-      
-      <label><span id="feeLabel">Platform Fees</span>: <span id="feeValue" class="text-red">25%</span></label>
-      <input type="range" id="fees" min="0" max="40" value="25" oninput="updateDisplay('fees', '', '%')">
-
-      <label>Idle Days (Repairs/Cleaning): <span id="idleValue" class="text-red">5</span></label>
-      <input type="range" id="idle" min="0" max="15" value="5" oninput="updateDisplay('idle', '', ' days')">
-
-      <label>Weekly Admin Hours: <span id="hoursValue" class="text-red">12</span></label>
-      <input type="range" id="hours" min="0" max="100" value="12" oninput="updateDisplay('hours', '', ' hrs')">
-      
-      <button onclick="calculateResults()">Reveal My Leaks →</button>
-    </div>
-    <div class="progress">
-      <div class="dot"></div><div class="dot"></div><div class="dot active"></div>
-    </div>
-  </div>
-
-  <div class="step" id="step4">
-    <div class="card">
-      <h2 style="text-align: center;">Your Profit Health</h2>
-      
-      <div class="leak-visual">
-        <div class="stat-row">
-          <strong>Gross Revenue</strong>
-          <span id="grossRev">$0</span>
+    <div id="step-0" class="step active">
+        <div style="text-align: center;">
+            <h1 style="font-size: 28px;">🚗 Profit Leak Audit</h1>
+            <p style="color: #64748b; font-size: 18px;">Find out exactly how much profit your rental fleet is losing to hidden inefficiencies.</p>
+            <div style="margin: 30px 0;">
+                <span style="background: #dbeafe; color: #1e40af; padding: 6px 16px; border-radius: 20px; font-size: 14px; font-weight: 600;">Fast • Free • Accurate</span>
+            </div>
+            <button class="btn-main" onclick="goToStep(1)">Start Audit</button>
         </div>
-        <div class="pipe">
-          <div class="leak-flow" id="leakFlow"></div>
-        </div>
-        <div class="stat-row">
-          <span class="text-green">Keep: <b id="profitText">$0</b></span>
-          <span class="text-red">Lost: <b id="leakText">$0</b></span>
-        </div>
-      </div>
+    </div>
 
-      <h3>Where is the money going?</h3>
-      <div class="leak-item">
-        <div>
-          <strong id="l1Name">Fees</strong>
-          <div class="text-muted" id="l1Desc">Commissions</div>
-        </div>
-        <strong class="text-red" id="l1Am">$0</strong>
-      </div>
-      <div class="leak-item">
-        <div>
-          <strong>Idle Time</strong>
-          <div class="text-muted">Unbooked days</div>
-        </div>
-        <strong class="text-red" id="l2Am">$0</strong>
-      </div>
-      <div class="leak-item">
-        <div>
-          <strong>Admin Time</strong>
-          <div class="text-muted">Your unpaid labor</div>
-        </div>
-        <strong class="text-red" id="l3Am">$0</strong>
-      </div>
+    <div id="step-1" class="step">
+        <h2>How do you operate?</h2>
+        <p style="color: #64748b; margin-bottom: 20px;">Select your current model.</p>
 
-      <div style="position: relative; margin-top: 30px;">
-        <div class="card blur-content" style="margin:0; background: #f8fafc;">
-          <h3 style="text-align: center;">Real Hourly Wage</h3>
-          <div style="font-size: 30px; text-align: center; font-weight: 800;">$4.50/hr</div>
-        </div>
+        <button class="btn-select" onclick="setMode('platform')">
+            <strong>📱 Platform Host</strong><br>
+            <span style="color: #64748b; font-size: 14px;">Turo, Getaround, etc.</span>
+        </button>
+
+        <button class="btn-select" onclick="setMode('private')">
+            <strong>🔑 Private / Direct</strong><br>
+            <span style="color: #64748b; font-size: 14px;">Direct bookings, own insurance</span>
+        </button>
+
+        <button class="btn-select" onclick="setMode('planning')">
+            <strong>🚀 Planning to Start</strong><br>
+            <span style="color: #64748b; font-size: 14px;">Researching numbers</span>
+        </button>
+    </div>
+
+    <div id="step-2" class="step">
+        <h2>Fleet Snapshot</h2>
         
-        <div class="locked-overlay" id="emailOverlay">
-          <div style="text-align: center; width: 100%; padding: 20px;">
-            <p style="margin-bottom: 15px; font-weight: 600;">Unlock your True Hourly Wage</p>
-            <input type="email" id="email" placeholder="Enter your email address">
-            <button onclick="saveLead()" style="padding: 12px; font-size: 14px;">See Full Report</button>
-          </div>
-        </div>
+        <label><strong>Number of Cars:</strong> <span id="txt-cars" style="color: #2563eb;">1</span></label>
+        <input type="range" id="inp-cars" min="1" max="50" value="1" oninput="updateVal('cars', '')">
+
+        <label><strong>Average Daily Rate:</strong> <span id="txt-rate" style="color: #2563eb;">$75</span></label>
+        <input type="range" id="inp-rate" min="20" max="500" value="75" oninput="updateVal('rate', '$')">
+
+        <label><strong>Booked Days per Month:</strong> <span id="txt-days" style="color: #2563eb;">15</span></label>
+        <input type="range" id="inp-days" min="1" max="30" value="15" oninput="updateVal('days', '')">
+
+        <button class="btn-main" onclick="goToStep(3)">Next: Hidden Costs</button>
+    </div>
+
+    <div id="step-3" class="step">
+        <h2>Hidden Costs</h2>
         
-        <div id="revealedStats" style="display: none; text-align: center; margin-top: 20px;">
-          <h3>Your True Hourly Wage</h3>
-          <div id="trueHourly" style="font-size: 42px; font-weight: 800; color: #2563eb;">$0.00</div>
-          <p class="text-muted">After all hidden costs and time.</p>
+        <label><strong><span id="lbl-fees">Platform Fees</span>:</strong> <span id="txt-fees" style="color: #dc2626;">25%</span></label>
+        <input type="range" id="inp-fees" min="0" max="40" value="25" oninput="updateVal('fees', '', '%')">
+
+        <label><strong>Idle Days (Repair/Clean):</strong> <span id="txt-idle" style="color: #dc2626;">5</span></label>
+        <input type="range" id="inp-idle" min="0" max="15" value="5" oninput="updateVal('idle', '')">
+
+        <label><strong>Admin Hours / Week:</strong> <span id="txt-hours" style="color: #dc2626;">12</span></label>
+        <input type="range" id="inp-hours" min="0" max="100" value="12" oninput="updateVal('hours', '')">
+
+        <button class="btn-main" onclick="calculate()">Calculate Results</button>
+    </div>
+
+    <div id="step-4" class="step">
+        <h2 style="text-align: center;">Profit Analysis</h2>
+
+        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+            <span>Revenue</span>
+            <span id="res-gross" style="font-weight: bold;">$0</span>
         </div>
-      </div>
+        <div class="bar-wrap">
+            <div id="bar-profit" class="bar-fill"></div>
+            <div class="bar-leak"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 25px;">
+            <span style="color: #16a34a; font-weight: bold;">Profit: <span id="res-profit">$0</span></span>
+            <span style="color: #dc2626; font-weight: bold;">Leaks: <span id="res-leak">$0</span></span>
+        </div>
+
+        <div class="leak-list">
+            <div class="leak-row">
+                <span>Fees / Commision</span>
+                <span id="leak-1" class="red-text">$0</span>
+            </div>
+            <div class="leak-row">
+                <span>Idle Time Cost</span>
+                <span id="leak-2" class="red-text">$0</span>
+            </div>
+            <div class="leak-row">
+                <span>Admin Labor</span>
+                <span id="leak-3" class="red-text">$0</span>
+            </div>
+        </div>
+
+        <div id="locked-area" class="locked-wrapper">
+            <div class="blurred-bg">
+                <h3>True Hourly Wage</h3>
+                <h1>$45.00/hr</h1>
+            </div>
+            <div class="lock-overlay">
+                <h3>🔓 Unlock Full Report</h3>
+                <p style="font-size: 14px; color: #64748b;">See your actual hourly wage after leaks.</p>
+                <input type="email" id="email" placeholder="Enter your email address">
+                <button class="btn-main" onclick="submitData()">Show My Wage</button>
+            </div>
+        </div>
+
+        <div id="unlocked-area" style="display: none; text-align: center; margin-top: 30px; background: #f0fdf4; padding: 20px; border-radius: 10px; border: 1px solid #bbf7d0;">
+            <h3>Your True Hourly Wage</h3>
+            <h1 id="res-hourly" style="color: #16a34a; font-size: 40px; margin: 10px 0;">$0.00</h1>
+            <p style="color: #64748b;">This is what you actually take home.</p>
+            <button onclick="location.reload()" style="background: none; border: none; text-decoration: underline; color: #64748b; cursor: pointer; margin-top: 10px;">Start Over</button>
+        </div>
 
     </div>
-    <button onclick="location.reload()" style="background: transparent; color: #64748b; border: 1px solid #cbd5e1; margin-top: 10px;">Start Over</button>
-  </div>
 
 </div>
 
 <script>
-// CONFIG
-const SUPABASE_URL = "https://mfuoltkdoocdpurqytzt.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1mdW9sdGtkb29jZHB1cnF5dHp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MDQ3ODAsImV4cCI6MjA4NDA4MDc4MH0.MVTJr-CJUuuOxqeiLJ0F9tGeXP89krdxiWMdl6Ux6GA";
+    // Config
+    const SUPABASE_URL = "https://mfuoltkdoocdpurqytzt.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1mdW9sdGtkb29jZHB1cnF5dHp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MDQ3ODAsImV4cCI6MjA4NDA4MDc4MH0.MVTJr-CJUuuOxqeiLJ0F9tGeXP89krdxiWMdl6Ux6GA";
 
-let data = {
-  op: 'platform',
-  cars: 1, rate: 75, days: 15,
-  fees: 25, idle: 5, hours: 12
-};
+    // State
+    let state = {
+        mode: 'platform',
+        cars: 1, rate: 75, days: 15,
+        fees: 25, idle: 5, hours: 12,
+        results: {}
+    };
 
-let currentStep = 0;
+    // Navigation
+    window.goToStep = function(n) {
+        document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+        document.getElementById('step-' + n).classList.add('active');
+    };
 
-function nextStep() {
-  document.getElementById(`step${currentStep}`).classList.remove('active');
-  currentStep++;
-  document.getElementById(`step${currentStep}`).classList.add('active');
-}
+    // logic for step 1
+    window.setMode = function(m) {
+        state.mode = m;
+        
+        // update defaults based on selection
+        const feeInput = document.getElementById('inp-fees');
+        const feeLabel = document.getElementById('lbl-fees');
+        
+        if(m === 'private') {
+            feeInput.value = 3;
+            feeLabel.innerText = "Processing Fees";
+        } else {
+            feeInput.value = 25;
+            feeLabel.innerText = "Platform Fees";
+        }
+        
+        updateVal('fees', '', '%'); // refresh visual
+        goToStep(2);
+    };
 
-function setOperation(type) {
-  data.op = type;
-  
-  // Set logical defaults based on type
-  if(type === 'private') {
-    document.getElementById('fees').value = 3; // processing fees
-    document.getElementById('feeLabel').textContent = "Processing Fees";
-  } else {
-    document.getElementById('fees').value = 25; // standard platform
-    document.getElementById('feeLabel').textContent = "Platform Fees";
-  }
-  
-  updateDisplay('fees', '', '%');
-  nextStep();
-}
+    // logic for sliders
+    window.updateVal = function(key, prefix, suffix) {
+        const val = document.getElementById('inp-' + key).value;
+        state[key] = parseInt(val);
+        
+        const txt = document.getElementById('txt-' + key);
+        if(txt) txt.innerText = (prefix || '') + val + (suffix || '');
+    };
 
-function updateDisplay(id, prefix, suffix) {
-  const val = document.getElementById(id).value;
-  document.getElementById(id + 'Value').textContent = prefix + val + suffix;
-  data[id] = parseInt(val);
-}
+    // calculation logic
+    window.calculate = function() {
+        const gross = state.cars * state.rate * state.days;
+        
+        const costFees = gross * (state.fees / 100);
+        const costIdle = state.cars * state.rate * state.idle;
+        const costAdmin = state.hours * 4 * 25; // $25/hr opportunity cost
+        
+        const totalLeak = costFees + costIdle + costAdmin;
+        const netProfit = gross - totalLeak;
+        
+        // protect against negative profit
+        const safeProfit = netProfit > 0 ? netProfit : 0;
+        const profitPercent = (safeProfit / gross) * 100;
+        
+        // Hourly calc
+        const workedHours = state.hours * 4;
+        let hourly = 0;
+        if(workedHours > 0) hourly = netProfit / workedHours;
+        
+        // update UI
+        document.getElementById('res-gross').innerText = '$' + gross.toLocaleString();
+        document.getElementById('res-profit').innerText = '$' + Math.round(netProfit).toLocaleString();
+        document.getElementById('res-leak').innerText = '$' + Math.round(totalLeak).toLocaleString();
+        
+        document.getElementById('leak-1').innerText = '-$' + Math.round(costFees).toLocaleString();
+        document.getElementById('leak-2').innerText = '-$' + Math.round(costIdle).toLocaleString();
+        document.getElementById('leak-3').innerText = '-$' + Math.round(costAdmin).toLocaleString();
+        
+        document.getElementById('bar-profit').style.width = profitPercent + "%";
+        document.getElementById('res-hourly').innerText = '$' + hourly.toFixed(2) + '/hr';
+        
+        // save to state for db
+        state.results = { gross, netProfit, hourly };
+        
+        goToStep(4);
+    };
 
-function calculateResults() {
-  // Pull latest values to be safe
-  data.cars = parseInt(document.getElementById('cars').value);
-  data.rate = parseInt(document.getElementById('rate').value);
-  data.days = parseInt(document.getElementById('days').value);
-  data.fees = parseInt(document.getElementById('fees').value);
-  data.idle = parseInt(document.getElementById('idle').value);
-  data.hours = parseInt(document.getElementById('hours').value);
+    // database logic
+    window.submitData = async function() {
+        const email = document.getElementById('email').value;
+        if(!email || !email.includes('@')) {
+            alert('Please enter a valid email');
+            return;
+        }
 
-  // Math
-  const monthlyRevenue = data.cars * data.rate * data.days;
-  const platformCost = monthlyRevenue * (data.fees / 100);
-  const idleCost = data.cars * data.rate * data.idle; // Opportunity cost
-  const adminCost = data.hours * 4 * 25; // $25/hr value assigned to your time
-  
-  const totalLeak = platformCost + idleCost + adminCost;
-  const netProfit = monthlyRevenue - totalLeak;
-  
-  // Percentages for bar
-  let profitShare = (netProfit / monthlyRevenue) * 100;
-  if(profitShare < 0) profitShare = 0; // Prevent broken bar
-  
-  // Hourly Calc
-  const monthlyHoursInput = data.hours * 4;
-  let effectiveHourly = 0;
-  if(monthlyHoursInput > 0) {
-    effectiveHourly = netProfit / monthlyHoursInput;
-  }
-  
-  // Render
-  document.getElementById('grossRev').textContent = '$' + Math.round(monthlyRevenue).toLocaleString();
-  document.getElementById('leakFlow').style.setProperty('--profit-percent', profitShare + '%');
-  document.getElementById('profitText').textContent = '$' + Math.round(netProfit).toLocaleString();
-  document.getElementById('leakText').textContent = '$' + Math.round(totalLeak).toLocaleString();
-  
-  // Breakdown
-  const leakName = data.op === 'private' ? "Processing Fees" : "Platform Fees";
-  document.getElementById('l1Name').textContent = leakName;
-  document.getElementById('l1Am').textContent = '-$' + Math.round(platformCost).toLocaleString();
-  document.getElementById('l2Am').textContent = '-$' + Math.round(idleCost).toLocaleString();
-  document.getElementById('l3Am').textContent = '-$' + Math.round(adminCost).toLocaleString();
-  
-  // Hidden Result
-  document.getElementById('trueHourly').textContent = '$' + effectiveHourly.toFixed(2) + '/hr';
-  
-  // Store for API
-  window.finalData = {
-    ...data,
-    gross: monthlyRevenue,
-    profit: netProfit,
-    hourly: effectiveHourly
-  };
-  
-  nextStep();
-}
+        const btn = document.querySelector('button[onclick="submitData()"]');
+        btn.innerText = "Processing...";
 
-async function saveLead() {
-  const email = document.getElementById('email').value;
-  if(!email.includes('@')) {
-    alert("Please enter a valid email");
-    return;
-  }
-  
-  const btn = document.querySelector('button[onclick="saveLead()"]');
-  btn.innerHTML = "Processing...";
-  
-  try {
-    // Send to Supabase
-    await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
-      method: "POST",
-      headers: {
-        "apikey": SUPABASE_ANON_KEY,
-        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        email: email,
-        ...window.finalData
-      })
-    });
-    
-    // UI Unlock
-    document.querySelector('.blur-content').style.filter = 'none';
-    document.getElementById('emailOverlay').style.display = 'none';
-    document.querySelector('.blur-content').style.display = 'none'; // hide fake card
-    document.getElementById('revealedStats').style.display = 'block'; // show real card
-    
-  } catch(e) {
-    console.error(e);
-    alert("Error saving. Please try again.");
-    btn.innerHTML = "See Full Report";
-  }
-}
+        try {
+            await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
+                method: "POST",
+                headers: {
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": `Bearer ${SUPABASE_KEY}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email,
+                    operator_type: state.mode,
+                    cars: state.cars,
+                    gross: state.results.gross,
+                    profit: state.results.netProfit,
+                    hourly: parseFloat(state.results.hourly.toFixed(2))
+                })
+            });
+
+            // success
+            document.getElementById('locked-area').style.display = 'none';
+            document.getElementById('unlocked-area').style.display = 'block';
+
+        } catch(err) {
+            console.error(err);
+            // fallback if db fails, still show user results
+            document.getElementById('locked-area').style.display = 'none';
+            document.getElementById('unlocked-area').style.display = 'block';
+        }
+    };
 </script>
 
 </body>
