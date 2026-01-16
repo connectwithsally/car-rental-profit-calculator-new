@@ -2,112 +2,258 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Car Rental Profit Leak Audit</title>
+<title>Car Rental Profit Reality Check</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
-* { box-sizing: border-box; }
-
+/* ===== CLEAN PROFESSIONAL DESIGN ===== */
 body {
+  background: #ffffff;
+  color: #1a1a1a;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: #f1f5f9;
-  color: #0f172a;
+  line-height: 1.5;
 }
 
 .container {
-  max-width: 760px;
+  max-width: 600px; /* Increased from 520px */
   margin: auto;
-  padding: 24px;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-.step { display: none; }
-.step.active { display: block; }
+.step { 
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+.step.active { 
+  display: block;
+}
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Clean Cards */
 .card {
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 28px;
-  margin-bottom: 24px;
-  border: 1px solid #e2e8f0;
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  border: 1px solid #e9ecef;
+  box-sizing: border-box;
 }
 
-h1, h2, h3 {
-  margin-top: 0;
-}
-
-button {
+/* Clean Buttons */
+.btn {
   width: 100%;
   padding: 16px;
   margin-top: 16px;
-  border-radius: 10px;
-  border: none;
   background: #2563eb;
+  border: none;
   color: white;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background 0.2s;
+  box-sizing: border-box;
 }
 
-button.secondary {
-  background: #e2e8f0;
-  color: #0f172a;
+.btn:hover {
+  background: #1d4ed8;
 }
 
-label {
-  display: block;
-  margin-top: 20px;
-  font-weight: 600;
+.btn-secondary {
+  background: #6b7280;
 }
 
-input[type="range"] {
+.btn-secondary:hover {
+  background: #4b5563;
+}
+
+/* Clean Inputs */
+input, select {
   width: 100%;
-  margin-top: 10px;
+  padding: 14px;
+  margin-top: 8px;
+  background: white;
+  color: #1a1a1a;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
 }
 
-.value {
-  text-align: center;
-  font-size: 22px;
-  font-weight: 700;
-  margin-top: 6px;
-  color: #2563eb;
+input:focus, select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-.pipe {
-  height: 42px;
+/* Slider Styles - FIXED CONTAINER ISSUE */
+.slider-container {
+  margin: 24px 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.slider {
+  width: 100%;
+  height: 6px;
   background: #e5e7eb;
-  border-radius: 21px;
-  overflow: hidden;
-  margin-top: 16px;
+  border-radius: 3px;
+  outline: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
 }
 
-.flow {
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    #16a34a 0%,
-    #16a34a var(--profit,50%),
-    #dc2626 var(--profit,50%),
-    #dc2626 100%
-  );
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  background: #2563eb;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
-.blur {
-  filter: blur(6px);
-  user-select: none;
-}
-
-.control-bar {
-  height: 14px;
-  border-radius: 7px;
-  background: linear-gradient(90deg,#dc2626,#f59e0b,#16a34a);
+.slider-value {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  color: #2563eb;
   margin-top: 12px;
+}
+
+/* Results Cards */
+.result-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  border: 1px solid #e9ecef;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.result-number {
+  font-size: 36px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 10px 0;
+}
+
+.result-label {
+  font-size: 14px;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Leakage Display */
+.leakage-line {
+  border-top: 2px dashed #dc2626;
+  margin: 24px 0;
+  position: relative;
+}
+
+.leakage-line::before {
+  content: "↓ leakage";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  padding: 0 12px;
+  color: #dc2626;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Control Meter */
+.control-meter {
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  margin: 20px 0;
+  overflow: hidden;
+  width: 100%;
 }
 
 .control-fill {
   height: 100%;
-  background: rgba(255,255,255,0.4);
-  width: 0%;
+  background: linear-gradient(90deg, #dc2626, #f59e0b, #16a34a);
+  border-radius: 4px;
+  transition: width 1s ease;
+}
+
+/* Microcopy */
+.microcopy {
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: 12px;
+  font-style: italic;
+}
+
+/* Progress Indicator */
+.progress {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 32px 0;
+}
+
+.progress-dot {
+  width: 8px;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 50%;
+}
+
+.progress-dot.active {
+  background: #2563eb;
+}
+
+/* Blur Effect for Email Capture */
+.blur {
+  filter: blur(8px);
+  user-select: none;
+  position: relative;
+  transition: all 0.5s ease;
+}
+
+.blur::after {
+  content: "🔒 Enter email to reveal";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: 2px solid #2563eb;
+  color: #2563eb;
+  font-weight: bold;
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .container {
+    padding: 16px;
+    max-width: 100%;
+  }
+  
+  .card, .result-card {
+    padding: 20px;
+  }
+  
+  .result-number {
+    font-size: 32px;
+  }
 }
 </style>
 </head>
@@ -115,155 +261,726 @@ input[type="range"] {
 <body>
 <div class="container">
 
-<!-- STEP 0 -->
-<div class="step active" id="step0">
-  <div class="card">
-    <h1>Car Rental Profit Leak Audit</h1>
-    <p>This 2-minute audit shows exactly where rental profit disappears.</p>
-    <button onclick="go(1)">Start Free Audit</button>
+<!-- SCREEN 0: LANDING -->
+<div class="step active" id="screen0">
+  <div style="text-align: center; margin-top: 40px;">
+    <h1 style="font-size: 32px; font-weight: 700; margin-bottom: 16px; color: #1a1a1a;">
+      Car Rental Profit Reality Check
+    </h1>
+    <p style="font-size: 18px; color: #4b5563; max-width: 400px; margin: 0 auto 40px;">
+      See what one car actually earns — after the silent leaks.
+    </p>
+    <button class="btn" onclick="nextScreen()">
+      Start Reality Check →
+    </button>
+    <p class="microcopy" style="margin-top: 32px;">
+      Takes about 60 seconds. No login. No fluff.
+    </p>
   </div>
 </div>
 
-<!-- STEP 1 -->
-<div class="step" id="step1">
+<!-- SCREEN 1: ENTRY -->
+<div class="step" id="screen1">
   <div class="card">
-    <h2>Your situation</h2>
-    <button onclick="setOp('platform')">Platform Host (Turo, etc.)</button>
-    <button onclick="setOp('private')">Private / Direct Rentals</button>
-    <button onclick="setOp('beginner')">Planning to Start</button>
+    <h2 style="font-size: 24px; margin-bottom: 24px; color: #1a1a1a;">
+      How do you rent cars today?
+    </h2>
+    
+    <button class="btn-secondary" onclick="setOperation('platform')" style="text-align: left; padding: 20px; margin-top: 12px; background: white; border: 2px solid #e5e7eb; color: #1a1a1a;">
+      <strong>I rent on a platform</strong><br>
+      <small style="color: #6b7280;">Turo, Getaround, etc.</small>
+    </button>
+    
+    <button class="btn-secondary" onclick="setOperation('private')" style="text-align: left; padding: 20px; margin-top: 12px; background: white; border: 2px solid #e5e7eb; color: #1a1a1a;">
+      <strong>I rent privately / direct</strong><br>
+      <small style="color: #6b7280;">My own bookings</small>
+    </button>
+    
+    <button class="btn-secondary" onclick="setOperation('both')" style="text-align: left; padding: 20px; margin-top: 12px; background: white; border: 2px solid #e5e7eb; color: #1a1a1a;">
+      <strong>I do both</strong><br>
+      <small style="color: #6b7280;">Mixed approach</small>
+    </button>
+    
+    <button class="btn-secondary" onclick="setOperation('beginner')" style="text-align: left; padding: 20px; margin-top: 12px; background: white; border: 2px solid #e5e7eb; color: #1a1a1a;">
+      <strong>I'm planning to start</strong><br>
+      <small style="color: #6b7280;">Just researching</small>
+    </button>
+  </div>
+  
+  <div class="progress">
+    <div class="progress-dot active"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
   </div>
 </div>
 
-<!-- STEP 2 -->
-<div class="step" id="step2">
+<!-- SCREEN 2: FLEET BASICS -->
+<div class="step" id="screen2">
   <div class="card">
-    <h2>Core Numbers</h2>
-
-    <label>Number of cars</label>
-    <input type="range" id="cars" min="1" max="50" value="5" oninput="v('carsVal',this.value)">
-    <div class="value"><span id="carsVal">5</span> cars</div>
-
-    <label>Average daily rate ($)</label>
-    <input type="range" id="rate" min="30" max="500" value="90" oninput="v('rateVal','$'+this.value)">
-    <div class="value" id="rateVal">$90</div>
-
-    <label>Booked days per month</label>
-    <input type="range" id="days" min="1" max="30" value="15" oninput="v('daysVal',this.value)">
-    <div class="value"><span id="daysVal">15</span> days</div>
-
-    <button onclick="go(3)">Continue</button>
-  </div>
-</div>
-
-<!-- STEP 3 -->
-<div class="step" id="step3">
-  <div class="card">
-    <h2>Hidden Leaks</h2>
-
-    <label>Fees / Friction (%)</label>
-    <input type="range" id="fees" min="5" max="40" value="25" oninput="v('feesVal',this.value+'%')">
-    <div class="value" id="feesVal">25%</div>
-
-    <label>Idle days per month</label>
-    <input type="range" id="idle" min="0" max="20" value="5" oninput="v('idleVal',this.value)">
-    <div class="value"><span id="idleVal">5</span> days</div>
-
-    <label>Admin hours per week</label>
-    <input type="range" id="hours" min="0" max="80" value="10" oninput="v('hoursVal',this.value)">
-    <div class="value"><span id="hoursVal">10</span> hrs</div>
-
-    <button onclick="calculate()">See Results</button>
-  </div>
-</div>
-
-<!-- STEP 4 -->
-<div class="step" id="step4">
-  <div class="card">
-    <h2>Your Profit Reality</h2>
-
-    <div class="pipe">
-      <div class="flow" id="flow"></div>
+    <h2 style="font-size: 24px; margin-bottom: 16px; color: #1a1a1a;">
+      Let's start with the obvious numbers
+    </h2>
+    
+    <label style="display: block; margin-top: 24px; color: #374151;">
+      Number of cars
+      <input type="number" id="cars" min="1" max="50" value="1"> <!-- Increased to 50 -->
+    </label>
+    
+    <label style="display: block; margin-top: 24px; color: #374151;">
+      Average daily price per car
+      <input type="number" id="rate" min="20" max="500" value="75">
+    </label>
+    
+    <div style="margin-top: 32px;">
+      <label style="color: #374151;">Average booked days per month (per car)</label>
+      <div class="slider-container">
+        <input type="range" class="slider" id="days" min="5" max="30" value="15" oninput="updateSlider('days')">
+        <div class="slider-value" id="daysValue">15 days</div>
+      </div>
+      <p class="microcopy">
+        Most hosts fall between 12–22 days
+      </p>
     </div>
+  </div>
+  
+  <p class="microcopy" style="text-align: center;">
+    Don't overthink it — estimate honestly.
+  </p>
+  
+  <button class="btn" onclick="nextScreen()">
+    Continue →
+  </button>
+  
+  <div class="progress">
+    <div class="progress-dot"></div>
+    <div class="progress-dot active"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+  </div>
+</div>
 
-    <p><strong>Monthly Profit:</strong> $<span id="profit"></span></p>
-    <p><strong>Monthly Leaks:</strong> $<span id="leaks"></span></p>
+<!-- SCREEN 3A: PLATFORM CUT -->
+<div class="step" id="screen3a">
+  <div class="card">
+    <h2 style="font-size: 24px; margin-bottom: 16px; color: #1a1a1a;">
+      Platform cut (the part no one likes to talk about)
+    </h2>
+    
+    <div class="slider-container">
+      <label style="color: #374151;">Platform takes:</label>
+      <input type="range" class="slider" id="platformCut" min="15" max="40" value="30" oninput="updateSlider('platformCut')">
+      <div class="slider-value" id="platformCutValue">30%</div>
+    </div>
+    
+    <p class="microcopy">
+      Includes host fees, protection plans, adjustments… not opinions.
+    </p>
+  </div>
+  
+  <button class="btn" onclick="nextScreen()">
+    Continue to Real Costs →
+  </button>
+  
+  <div class="progress">
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot active"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+  </div>
+</div>
 
-    <div class="control-bar">
+<!-- SCREEN 3B: PRIVATE PAYMENT -->
+<div class="step" id="screen3b">
+  <div class="card">
+    <h2 style="font-size: 24px; margin-bottom: 24px; color: #1a1a1a;">
+      How do customers usually pay you?
+    </h2>
+    
+    <button class="btn-secondary" onclick="setPayment('cash')" style="text-align: left; padding: 16px; margin-top: 8px; background: white; border: 2px solid #e5e7eb; color: #1a1a1a;">
+      <strong>Cash</strong>
+    </button>
+    
+    <button class="btn-secondary" onclick="setPayment('bank')" style="text-align: left; padding: 16px; margin-top: 8px; background: white; border: 2px solid #e5e7eb; color: #1a1a1a;">
+      <strong>Bank transfer</strong>
+    </button>
+    
+    <button class="btn-secondary" onclick="setPayment('card')" style="text-align: left; padding: 16px; margin-top: 8px; background: white; border: 2px solid #e5e7eb; color: #1a1a1a;">
+      <strong>Card</strong>
+    </button>
+    
+    <button class="btn-secondary" onclick="setPayment('mixed')" style="text-align: left; padding: 16px; margin-top: 8px; background: white; border: 2px solid #e5e7eb; color: #1a1a1a;">
+      <strong>Mixed</strong>
+    </button>
+    
+    <p class="microcopy" style="margin-top: 24px;">
+      This affects delays, disputes, and collections.
+    </p>
+  </div>
+  
+  <button class="btn" onclick="nextScreen()">
+    Continue to Real Costs →
+  </button>
+  
+  <div class="progress">
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot active"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+  </div>
+</div>
+
+<!-- SCREEN 4: REAL COSTS -->
+<div class="step" id="screen4">
+  <div class="card">
+    <h2 style="font-size: 24px; margin-bottom: 16px; color: #1a1a1a;">
+      Monthly costs per car (rough averages)
+    </h2>
+    
+    <label style="display: block; margin-top: 24px; color: #374151;">
+      Insurance (monthly)
+      <input type="number" id="insurance" min="0" max="500" value="150">
+    </label>
+    
+    <label style="display: block; margin-top: 24px; color: #374151;">
+      Maintenance + wear (monthly average)
+      <input type="number" id="maintenance" min="0" max="300" value="100">
+    </label>
+    
+    <div style="margin-top: 24px;">
+      <label style="color: #374151;">Idle / downtime days per month</label>
+      <p style="font-size: 14px; color: #6b7280; margin: 4px 0;">
+        Repairs, cleaning, no bookings
+      </p>
+      <input type="number" id="idleDays" min="0" max="15" value="5">
+    </div>
+  </div>
+  
+  <p class="microcopy" style="text-align: center;">
+    These numbers decide whether profit is real or imagined.
+  </p>
+  
+  <button class="btn" onclick="nextScreen()">
+    One Last Thing →
+  </button>
+  
+  <div class="progress">
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot active"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+  </div>
+</div>
+
+<!-- SCREEN 5: OPERATIONAL DRAG -->
+<div class="step" id="screen5">
+  <div class="card">
+    <h2 style="font-size: 24px; margin-bottom: 16px; color: #1a1a1a;">
+      One last thing people forget
+    </h2>
+    
+    <div style="margin-top: 24px;">
+      <label style="color: #374151;">Hours per week spent on admin</label>
+      <p style="font-size: 14px; color: #6b7280; margin: 4px 0;">
+        Messages, check-ins, claims, payments
+      </p>
+      <input type="number" id="adminHours" min="0" max="80" value="12"> <!-- Increased to 80 -->
+    </div>
+    
+    <div style="margin-top: 32px;">
+      <label style="display: block; margin-bottom: 12px; color: #374151;">
+        Who handles this today?
+      </label>
+      
+      <button class="btn-secondary" onclick="setHandler('me')" style="text-align: left; padding: 16px; margin-top: 8px; background: white; border: 2px solid #e5e7eb; color: #1a1a1a;">
+        <strong>Me</strong>
+      </button>
+      
+      <button class="btn-secondary" onclick="setHandler('staff')" style="text-align: left; padding: 16px; margin-top: 8px; background: white; border: 2px solid #e5e7eb; color: #1a1a1a;">
+        <strong>Staff</strong>
+      </button>
+      
+      <button class="btn-secondary" onclick="setHandler('outsourced')" style="text-align: left; padding: 16px; margin-top: 8px; background: white; border: 2px solid #e5e7eb; color: #1a1a1a;">
+        <strong>Outsourced</strong>
+      </button>
+      
+      <button class="btn-secondary" onclick="setHandler('chaos')" style="text-align: left; padding: 16px; margin-top: 8px; background: white; border: 2px solid #e5e7eb; color: #1a1a1a;">
+        <strong>No one / chaos</strong>
+      </button>
+    </div>
+  </div>
+  
+  <p class="microcopy" style="text-align: center;">
+    This doesn't judge hustle — it measures load.
+  </p>
+  
+  <button class="btn" onclick="calculateResults()">
+    See My Reality Check →
+  </button>
+  
+  <div class="progress">
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot active"></div>
+    <div class="progress-dot"></div>
+  </div>
+</div>
+
+<!-- SCREEN 6: RESULTS -->
+<div class="step" id="screen6">
+  <!-- SECTION 1: HEADLINE -->
+  <div style="text-align: center; margin-bottom: 40px;">
+    <h1 style="font-size: 28px; font-weight: 700; margin-bottom: 12px; color: #1a1a1a;">
+      Here's what your car rental business actually produces
+    </h1>
+    <p style="font-size: 16px; color: #6b7280;">
+      Based on the numbers you entered — not best-case scenarios.
+    </p>
+  </div>
+  
+  <!-- SECTION 2: THE NUMBERS -->
+  <div class="result-card">
+    <div class="result-label">Gross monthly revenue</div>
+    <div class="result-number" id="revenue">$0</div>
+    <p style="font-size: 14px; color: #6b7280; margin-top: 8px;">
+      Before fees, downtime, or reality.
+    </p>
+  </div>
+  
+  <div class="leakage-line"></div>
+  
+  <div class="result-card" style="background: #fef2f2; border-color: #fecaca;">
+    <div class="result-label">Silent leakage</div>
+    <div class="result-number" id="leakage">– $0 / month</div>
+    <p style="font-size: 14px; color: #dc2626; margin-top: 8px;">
+      Platform cuts • idle days • operational friction
+    </p>
+  </div>
+  
+  <div class="result-card" style="background: #f0f9ff; border-color: #bae6fd;">
+    <div class="result-label">True monthly profit (before paying yourself)</div>
+    <div class="result-number" id="profit">$0</div>
+    <p style="font-size: 14px; color: #0284c7; margin-top: 8px;">
+      This is the number that survives real life.
+    </p>
+  </div>
+  
+  <!-- SECTION 3: THE HAMMER -->
+  <div style="text-align: center; margin: 40px 0; padding: 32px; background: #f8f9fa; border-radius: 12px;">
+    <p style="font-size: 20px; font-weight: 600; margin-bottom: 16px; color: #1a1a1a;">
+      You're running a car rental business…<br>
+      but you only control <span id="controlPercent" style="color: #dc2626;">0%</span> of the outcome.
+    </p>
+    <p style="color: #4b5563;">
+      The rest is decided by platform rules, downtime, payment friction, and how much manual work the operation needs to stay alive.
+    </p>
+    
+    <div class="control-meter" style="margin: 24px auto; max-width: 300px;">
       <div class="control-fill" id="controlFill"></div>
     </div>
-    <p>You control <strong><span id="control"></span>%</strong> of outcomes</p>
-
-    <div class="card blur" id="hourlyCard">
-      <h3>Effective Hourly Pay</h3>
-      <p style="font-size:32px">$<span id="hourly"></span>/hr</p>
-    </div>
-
-    <input type="email" id="email" placeholder="Enter email to unlock">
-    <button onclick="unlock()">Unlock Full Report</button>
   </div>
+  
+  <!-- SECTION 4: TIME TRUTH -->
+  <div class="result-card blur" id="hourlyCard">
+    <div class="result-label">Your effective hourly earnings</div>
+    <div style="font-size: 48px; font-weight: 800; color: #1a1a1a; margin: 12px 0;">
+      <span id="hourly">$0</span><span style="font-size: 24px; color: #6b7280;">/hour</span>
+    </div>
+    <p style="color: #4b5563;">
+      Based on the time it takes to keep this running — not just driving revenue.
+    </p>
+  </div>
+  
+  <!-- SECTION 5: OPERATOR-TYPE INSIGHT -->
+  <div class="card" id="operatorInsight">
+    <!-- Dynamic content will be inserted here -->
+  </div>
+  
+  <!-- SECTION 6: LEAD CAPTURE -->
+  <div class="card" style="text-align: center; background: #f0f9ff; border-color: #bae6fd;">
+    <h3 style="font-size: 20px; margin-bottom: 16px; color: #1a1a1a;">
+      Want to see where this leaks — and what fixes it at your stage?
+    </h3>
+    
+    <input type="email" id="email" placeholder="your@email.com" style="margin-bottom: 16px;">
+    
+    <button class="btn" onclick="saveLead()">
+      Get my free profit breakdown
+    </button>
+    
+    <p class="microcopy" style="margin-top: 16px;">
+      One email. No spam. Pure diagnosis.
+    </p>
+  </div>
+  
+  <button class="btn-secondary" onclick="restart()" style="margin-top: 20px;">
+    Start Over
+  </button>
 </div>
 
 </div>
 
 <script>
-let operation = 'platform';
+// ===== CONFIG =====
+const SUPABASE_URL = "https://mfuoltkdoocdpurqytzt.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1mdW9sdGtkb29jZHB1cnF5dHp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MDQ3ODAsImV4cCI6MjA4NDA4MDc4MH0.MVTJr-CJUuuOxqeiLJ0F9tGeXP89krdxiWMdl6Ux6GA";
 
-function go(n){
-  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
-  document.getElementById('step'+n).classList.add('active');
+// ===== USER DATA =====
+let userData = {
+  operation: '',
+  cars: 1,
+  rate: 75,
+  days: 15,
+  platformCut: 30,
+  payment: '',
+  insurance: 150,
+  maintenance: 100,
+  idleDays: 5,
+  adminHours: 12,
+  handler: ''
+};
+
+let calculatedResults = {};
+
+// ===== SCREEN MANAGEMENT =====
+let currentScreen = 0;
+
+function nextScreen() {
+  document.getElementById('screen' + currentScreen).classList.remove('active');
+  currentScreen++;
+  
+  // Handle special cases for "both" and "beginner"
+  if (currentScreen === 3 && (userData.operation === 'both' || userData.operation === 'beginner')) {
+    currentScreen = 4; // Skip screen 3, go directly to screen 4
+  }
+  
+  document.getElementById('screen' + currentScreen).classList.add('active');
+  updateProgress();
 }
 
-function setOp(op){
-  operation = op;
-  go(2);
+function setOperation(type) {
+  userData.operation = type;
+  nextScreen();
+  
+  // Show correct screen 3 based on operation
+  setTimeout(() => {
+    if (type === 'platform') {
+      document.getElementById('screen3a').classList.add('active');
+      document.getElementById('screen3b').classList.remove('active');
+      document.getElementById('screen3b').style.display = 'none';
+      document.getElementById('screen3a').style.display = 'block';
+    } else if (type === 'private') {
+      document.getElementById('screen3a').classList.remove('active');
+      document.getElementById('screen3b').classList.add('active');
+      document.getElementById('screen3a').style.display = 'none';
+      document.getElementById('screen3b').style.display = 'block';
+    } else {
+      // For "both" or "beginner", skip screen 3 entirely
+      document.getElementById('screen3a').style.display = 'none';
+      document.getElementById('screen3b').style.display = 'none';
+    }
+  }, 10);
 }
 
-function v(id,val){ document.getElementById(id).innerText = val; }
-
-function calculate(){
-  const cars = +cars.value;
-  const rate = +rate.value;
-  const days = +days.value;
-  const fees = +fees.value;
-  const idle = +idle.value;
-  const hours = +hours.value;
-
-  const revenue = cars * rate * days;
-  const feeLeak = revenue * (fees/100);
-  const idleLeak = cars * rate * idle;
-  const adminLeak = hours * 4 * 30;
-
-  const leaks = feeLeak + idleLeak + adminLeak;
-  const profit = Math.max(0, revenue - leaks);
-
-  const profitPct = revenue > 0 ? Math.max(5,Math.min(95,(profit/revenue)*100)) : 5;
-
-  flow.style.setProperty('--profit',profitPct+'%');
-  document.getElementById('profit').innerText = Math.round(profit).toLocaleString();
-  document.getElementById('leaks').innerText = Math.round(leaks).toLocaleString();
-
-  let control = 60;
-  if(operation==='platform') control -= 15;
-  if(hours>30) control -= 15;
-  if(idle>8) control -= 10;
-  control = Math.max(15,Math.min(85,control));
-
-  controlFill.style.width = control+'%';
-  document.getElementById('control').innerText = control;
-
-  const hourly = profit / ((hours*4.3)||1);
-  document.getElementById('hourly').innerText = hourly.toFixed(2);
-
-  go(4);
+function setPayment(type) {
+  userData.payment = type;
+  nextScreen();
 }
 
-function unlock(){
-  if(!email.value.includes('@')){
-    alert('Enter a valid email');
+function setHandler(type) {
+  userData.handler = type;
+}
+
+function showScreen(screenNum) {
+  document.querySelectorAll('.step').forEach(step => {
+    step.classList.remove('active');
+    step.style.display = 'none';
+  });
+  document.getElementById('screen' + screenNum).classList.add('active');
+  document.getElementById('screen' + screenNum).style.display = 'block';
+  currentScreen = screenNum;
+  updateProgress();
+}
+
+function updateProgress() {
+  document.querySelectorAll('.progress-dot').forEach((dot, index) => {
+    if (index <= currentScreen) {
+      dot.classList.add('active');
+    } else {
+      dot.classList.remove('active');
+    }
+  });
+}
+
+function updateSlider(id) {
+  const element = document.getElementById(id);
+  const value = element.value;
+  document.getElementById(id + 'Value').textContent = 
+    id === 'days' ? value + ' days' : value + '%';
+  userData[id] = parseInt(value);
+}
+
+// ===== CALCULATION =====
+function calculateResults() {
+  // Get all values
+  userData.cars = parseInt(document.getElementById('cars').value) || 1;
+  userData.rate = parseInt(document.getElementById('rate').value) || 75;
+  userData.days = parseInt(document.getElementById('days').value) || 15;
+  userData.platformCut = parseInt(document.getElementById('platformCut')?.value) || 30;
+  userData.insurance = parseInt(document.getElementById('insurance').value) || 150;
+  userData.maintenance = parseInt(document.getElementById('maintenance').value) || 100;
+  userData.idleDays = parseInt(document.getElementById('idleDays').value) || 5;
+  userData.adminHours = parseInt(document.getElementById('adminHours').value) || 12;
+  
+  // Calculate revenue
+  const revenue = userData.cars * userData.rate * userData.days;
+  
+  // Calculate leaks based on operation type
+  let platformLeak = 0;
+  if (userData.operation === 'platform') {
+    platformLeak = revenue * (userData.platformCut / 100);
+  } else if (userData.operation === 'private') {
+    // Payment friction: cash=0%, bank=2%, card=3%, mixed=2%
+    const friction = { cash: 0, bank: 0.02, card: 0.03, mixed: 0.02 }[userData.payment] || 0.02;
+    platformLeak = revenue * friction;
+  } else {
+    // For "both" or "beginner": average 20% leakage
+    platformLeak = revenue * 0.20;
+  }
+  
+  const idleLeak = userData.cars * userData.rate * userData.idleDays;
+  const costLeak = userData.cars * (userData.insurance + userData.maintenance);
+  const adminLeak = userData.adminHours * 4.33 * 25; // $25/hour opportunity cost
+  
+  const totalLeaks = platformLeak + idleLeak + costLeak + adminLeak;
+  const profit = revenue - totalLeaks;
+  
+  // Calculate hourly
+  const monthlyHours = userData.adminHours * 4.33;
+  const hourly = monthlyHours > 0 ? profit / monthlyHours : 0;
+  
+  // Calculate control percentage
+  let controlPercent = 50; // Base
+  
+  if (userData.operation === 'platform') controlPercent -= 20;
+  if (userData.operation === 'private') controlPercent += 15;
+  if (userData.operation === 'both') controlPercent -= 10;
+  if (userData.operation === 'beginner') controlPercent -= 25;
+  
+  if (userData.handler === 'me') controlPercent -= 10;
+  if (userData.handler === 'chaos') controlPercent -= 15;
+  if (userData.idleDays > 7) controlPercent -= 8;
+  if (userData.adminHours > 15) controlPercent -= 5;
+  
+  controlPercent = Math.max(10, Math.min(90, Math.round(controlPercent)));
+  
+  // Store results
+  calculatedResults = {
+    revenue: Math.round(revenue),
+    leakage: Math.round(totalLeaks),
+    profit: Math.round(profit),
+    hourly: hourly.toFixed(2),
+    controlPercent: controlPercent
+  };
+  
+  // Update UI
+  document.getElementById('revenue').textContent = '$' + calculatedResults.revenue.toLocaleString();
+  document.getElementById('leakage').textContent = '– $' + calculatedResults.leakage.toLocaleString() + ' / month';
+  document.getElementById('profit').textContent = '$' + calculatedResults.profit.toLocaleString();
+  document.getElementById('hourly').textContent = '$' + calculatedResults.hourly;
+  document.getElementById('controlPercent').textContent = calculatedResults.controlPercent + '%';
+  document.getElementById('controlFill').style.width = calculatedResults.controlPercent + '%';
+  
+  // Set operator insight
+  const insightDiv = document.getElementById('operatorInsight');
+  let insight = '';
+  
+  if (userData.operation === 'platform') {
+    insight = `
+      <h3 style="font-size: 18px; margin-bottom: 12px; color: #1a1a1a;">Platform Reality</h3>
+      <p style="color: #4b5563; margin-bottom: 8px;">
+        Platforms are excellent for volume.<br>
+        They're structurally expensive once consistency matters.
+      </p>
+      <p style="color: #4b5563;">
+        At small scale, this feels fine.<br>
+        At scale, the margin compression compounds quietly.
+      </p>
+    `;
+  } else if (userData.operation === 'private') {
+    insight = `
+      <h3 style="font-size: 18px; margin-bottom: 12px; color: #1a1a1a;">Private Rental Reality</h3>
+      <p style="color: #4b5563; margin-bottom: 8px;">
+        The money isn't the issue — the workflow is.
+      </p>
+      <p style="color: #4b5563;">
+        Manual processes don't break on day one.<br>
+        They break when volume stops forgiving mistakes.
+      </p>
+    `;
+  } else if (userData.operation === 'both') {
+    insight = `
+      <h3 style="font-size: 18px; margin-bottom: 12px; color: #1a1a1a;">Mixed Operation Reality</h3>
+      <p style="color: #4b5563; margin-bottom: 8px;">
+        You're running two different businesses with one set of resources.
+      </p>
+      <p style="color: #4b5563;">
+        This gives you flexibility but creates complexity that eats into margins.
+      </p>
+    `;
+  } else {
+    insight = `
+      <h3 style="font-size: 18px; margin-bottom: 12px; color: #1a1a1a;">Beginner Reality</h3>
+      <p style="color: #4b5563; margin-bottom: 8px;">
+        On paper, this looks profitable.<br>
+        In practice, the first 3–6 months are volatile.
+      </p>
+      <p style="color: #4b5563;">
+        Cash timing, downtime, and learning curves decide survival — not daily price.
+      </p>
+    `;
+  }
+  
+  insightDiv.innerHTML = insight;
+  
+  // Show results screen
+  showScreen(6);
+}
+
+// ===== SAVE LEAD =====
+async function saveLead() {
+  const email = document.getElementById('email').value.trim();
+  
+  if (!email || !email.includes('@')) {
+    alert('Please enter a valid email address');
     return;
   }
-  hourlyCard.classList.remove('blur');
+  
+  const payload = {
+    email: email,
+    operator_type: userData.operation,
+    cars: userData.cars,
+    gross: calculatedResults.revenue,
+    profit: calculatedResults.profit,
+    hourly: parseFloat(calculatedResults.hourly),
+    control_percent: calculatedResults.controlPercent
+  };
+  
+  try {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify(payload)
+    });
+    
+    if (response.ok) {
+      // Success
+      const button = document.querySelector('button[onclick="saveLead()"]');
+      button.textContent = '✅ Report Sent!';
+      button.style.background = '#16a34a';
+      button.onclick = null;
+      
+      // Unlock blurred content
+      document.getElementById('hourlyCard').classList.remove('blur');
+      
+      const card = document.querySelector('.card[style*="background: #f0f9ff"]');
+      card.innerHTML = `
+        <div style="text-align: center; padding: 20px;">
+          <h3 style="font-size: 20px; margin-bottom: 16px; color: #1a1a1a;">✅ Report Sent Successfully!</h3>
+          <p style="color: #4b5563; margin-bottom: 16px;">
+            Your Profit Breakdown is being generated and will arrive in your inbox shortly.
+          </p>
+          <p style="font-size: 14px; color: #6b7280;">
+            Check your email in 2-3 minutes.
+          </p>
+        </div>
+      `;
+    } else {
+      alert('Something went wrong. Please try again.');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Connection error. Please check your internet and try again.');
+  }
 }
+
+// ===== RESTART =====
+function restart() {
+  currentScreen = 0;
+  document.querySelectorAll('.step').forEach(step => {
+    step.classList.remove('active');
+    step.style.display = 'none';
+  });
+  document.getElementById('screen0').classList.add('active');
+  document.getElementById('screen0').style.display = 'block';
+  
+  // Reset form
+  document.getElementById('email').value = '';
+  userData = {
+    operation: '',
+    cars: 1,
+    rate: 75,
+    days: 15,
+    platformCut: 30,
+    payment: '',
+    insurance: 150,
+    maintenance: 100,
+    idleDays: 5,
+    adminHours: 12,
+    handler: ''
+  };
+  
+  // Reset all inputs
+  document.getElementById('cars').value = '1';
+  document.getElementById('rate').value = '75';
+  document.getElementById('days').value = '15';
+  document.getElementById('platformCut').value = '30';
+  document.getElementById('insurance').value = '150';
+  document.getElementById('maintenance').value = '100';
+  document.getElementById('idleDays').value = '5';
+  document.getElementById('adminHours').value = '12';
+  
+  // Update slider displays
+  updateSlider('days');
+  updateSlider('platformCut');
+  
+  // Reset progress dots
+  updateProgress();
+}
+
+// ===== INITIALIZE =====
+document.addEventListener('DOMContentLoaded', function() {
+  // Set initial slider values
+  document.getElementById('days').value = userData.days;
+  document.getElementById('platformCut').value = userData.platformCut;
+  
+  // Set initial slider displays
+  updateSlider('days');
+  updateSlider('platformCut');
+  
+  // Initialize progress dots
+  updateProgress();
+  
+  // Show first screen
+  document.getElementById('screen0').style.display = 'block';
+});
 </script>
 
 </body>
