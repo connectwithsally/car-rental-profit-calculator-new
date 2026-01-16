@@ -9,14 +9,14 @@
 * { box-sizing: border-box; }
 
 body {
-  background: #f8fafc;
-  color: #0f172a;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f1f5f9;
+  color: #0f172a;
 }
 
 .container {
-  max-width: 720px;
+  max-width: 760px;
   margin: auto;
   padding: 24px;
 }
@@ -26,43 +26,46 @@ body {
 
 .card {
   background: #ffffff;
-  border-radius: 16px;
+  border-radius: 14px;
   padding: 28px;
   margin-bottom: 24px;
   border: 1px solid #e2e8f0;
 }
 
-h1, h2, h3 { margin-top: 0; }
+h1, h2, h3 {
+  margin-top: 0;
+}
 
 button {
   width: 100%;
   padding: 16px;
   margin-top: 16px;
-  background: #2563eb;
+  border-radius: 10px;
   border: none;
+  background: #2563eb;
   color: white;
   font-size: 16px;
   font-weight: 600;
-  border-radius: 10px;
   cursor: pointer;
 }
 
-button:hover { background: #1d4ed8; }
+button.secondary {
+  background: #e2e8f0;
+  color: #0f172a;
+}
 
-input, select {
+label {
+  display: block;
+  margin-top: 20px;
+  font-weight: 600;
+}
+
+input[type="range"] {
   width: 100%;
-  padding: 14px;
-  margin-top: 12px;
-  border-radius: 8px;
-  border: 1px solid #cbd5f5;
-  font-size: 16px;
+  margin-top: 10px;
 }
 
-input[type=range] {
-  padding: 0;
-}
-
-.range-value {
+.value {
   text-align: center;
   font-size: 22px;
   font-weight: 700;
@@ -71,31 +74,32 @@ input[type=range] {
 }
 
 .pipe {
-  height: 44px;
+  height: 42px;
   background: #e5e7eb;
-  border-radius: 22px;
+  border-radius: 21px;
   overflow: hidden;
+  margin-top: 16px;
 }
 
-.leak-flow {
+.flow {
   height: 100%;
   background: linear-gradient(
     90deg,
     #16a34a 0%,
-    #16a34a var(--profit, 50%),
-    #dc2626 var(--profit, 50%),
+    #16a34a var(--profit,50%),
+    #dc2626 var(--profit,50%),
     #dc2626 100%
   );
 }
 
 .blur {
-  filter: blur(7px);
+  filter: blur(6px);
   user-select: none;
 }
 
-.control-meter {
-  height: 16px;
-  border-radius: 8px;
+.control-bar {
+  height: 14px;
+  border-radius: 7px;
   background: linear-gradient(90deg,#dc2626,#f59e0b,#16a34a);
   margin-top: 12px;
 }
@@ -115,39 +119,39 @@ input[type=range] {
 <div class="step active" id="step0">
   <div class="card">
     <h1>Car Rental Profit Leak Audit</h1>
-    <p>Find out where your revenue silently disappears.</p>
-    <button onclick="goToStep(1)">Start Free Audit</button>
+    <p>This 2-minute audit shows exactly where rental profit disappears.</p>
+    <button onclick="go(1)">Start Free Audit</button>
   </div>
 </div>
 
 <!-- STEP 1 -->
 <div class="step" id="step1">
   <div class="card">
-    <h2>How do you operate?</h2>
-    <button onclick="setOperation('platform')">Platform Host</button>
-    <button onclick="setOperation('private')">Private / Direct</button>
-    <button onclick="setOperation('beginner')">Planning to Start</button>
+    <h2>Your situation</h2>
+    <button onclick="setOp('platform')">Platform Host (Turo, etc.)</button>
+    <button onclick="setOp('private')">Private / Direct Rentals</button>
+    <button onclick="setOp('beginner')">Planning to Start</button>
   </div>
 </div>
 
 <!-- STEP 2 -->
 <div class="step" id="step2">
   <div class="card">
-    <h2>Vehicle Basics</h2>
+    <h2>Core Numbers</h2>
 
     <label>Number of cars</label>
-    <input type="range" id="cars" min="1" max="50" value="1" oninput="carsVal.innerText=this.value">
-    <div class="range-value"><span id="carsVal">1</span> vehicles</div>
+    <input type="range" id="cars" min="1" max="50" value="5" oninput="v('carsVal',this.value)">
+    <div class="value"><span id="carsVal">5</span> cars</div>
 
-    <label>Average daily rate</label>
-    <input type="range" id="rate" min="30" max="500" value="90" oninput="rateVal.innerText='$'+this.value">
-    <div class="range-value"><span id="rateVal">$90</span></div>
+    <label>Average daily rate ($)</label>
+    <input type="range" id="rate" min="30" max="500" value="90" oninput="v('rateVal','$'+this.value)">
+    <div class="value" id="rateVal">$90</div>
 
-    <label>Booked days / month</label>
-    <input type="range" id="days" min="1" max="30" value="15" oninput="daysVal.innerText=this.value">
-    <div class="range-value"><span id="daysVal">15</span> days</div>
+    <label>Booked days per month</label>
+    <input type="range" id="days" min="1" max="30" value="15" oninput="v('daysVal',this.value)">
+    <div class="value"><span id="daysVal">15</span> days</div>
 
-    <button onclick="goToStep(3)">Continue</button>
+    <button onclick="go(3)">Continue</button>
   </div>
 </div>
 
@@ -157,16 +161,16 @@ input[type=range] {
     <h2>Hidden Leaks</h2>
 
     <label>Fees / Friction (%)</label>
-    <input type="range" id="fees" min="5" max="40" value="25" oninput="feesVal.innerText=this.value+'%'">
-    <div class="range-value"><span id="feesVal">25%</span></div>
+    <input type="range" id="fees" min="5" max="40" value="25" oninput="v('feesVal',this.value+'%')">
+    <div class="value" id="feesVal">25%</div>
 
-    <label>Idle days / month</label>
-    <input type="range" id="idle" min="0" max="20" value="5" oninput="idleVal.innerText=this.value">
-    <div class="range-value"><span id="idleVal">5</span> days</div>
+    <label>Idle days per month</label>
+    <input type="range" id="idle" min="0" max="20" value="5" oninput="v('idleVal',this.value)">
+    <div class="value"><span id="idleVal">5</span> days</div>
 
-    <label>Admin hours / week</label>
-    <input type="range" id="hours" min="0" max="80" value="12" oninput="hoursVal.innerText=this.value">
-    <div class="range-value"><span id="hoursVal">12</span> hrs</div>
+    <label>Admin hours per week</label>
+    <input type="range" id="hours" min="0" max="80" value="10" oninput="v('hoursVal',this.value)">
+    <div class="value"><span id="hoursVal">10</span> hrs</div>
 
     <button onclick="calculate()">See Results</button>
   </div>
@@ -175,23 +179,23 @@ input[type=range] {
 <!-- STEP 4 -->
 <div class="step" id="step4">
   <div class="card">
-    <h2>Your Profit Breakdown</h2>
+    <h2>Your Profit Reality</h2>
 
     <div class="pipe">
-      <div class="leak-flow" id="flow"></div>
+      <div class="flow" id="flow"></div>
     </div>
 
-    <p><strong>Profit:</strong> $<span id="profit"></span></p>
-    <p><strong>Leaks:</strong> $<span id="leaks"></span></p>
+    <p><strong>Monthly Profit:</strong> $<span id="profit"></span></p>
+    <p><strong>Monthly Leaks:</strong> $<span id="leaks"></span></p>
 
-    <div class="control-meter">
+    <div class="control-bar">
       <div class="control-fill" id="controlFill"></div>
     </div>
     <p>You control <strong><span id="control"></span>%</strong> of outcomes</p>
 
     <div class="card blur" id="hourlyCard">
-      <h3>Effective Hourly</h3>
-      <p style="font-size:32px;">$<span id="hourly"></span>/hr</p>
+      <h3>Effective Hourly Pay</h3>
+      <p style="font-size:32px">$<span id="hourly"></span>/hr</p>
     </div>
 
     <input type="email" id="email" placeholder="Enter email to unlock">
@@ -202,19 +206,21 @@ input[type=range] {
 </div>
 
 <script>
-let operation = '';
+let operation = 'platform';
 
-function goToStep(n) {
-  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+function go(n){
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
   document.getElementById('step'+n).classList.add('active');
 }
 
-function setOperation(op) {
+function setOp(op){
   operation = op;
-  goToStep(2);
+  go(2);
 }
 
-function calculate() {
+function v(id,val){ document.getElementById(id).innerText = val; }
+
+function calculate(){
   const cars = +cars.value;
   const rate = +rate.value;
   const days = +days.value;
@@ -228,31 +234,31 @@ function calculate() {
   const adminLeak = hours * 4 * 30;
 
   const leaks = feeLeak + idleLeak + adminLeak;
-  const profit = revenue - leaks;
+  const profit = Math.max(0, revenue - leaks);
 
-  const profitPct = Math.max(5, Math.min(95, (profit/revenue)*100));
+  const profitPct = revenue > 0 ? Math.max(5,Math.min(95,(profit/revenue)*100)) : 5;
 
-  flow.style.setProperty('--profit', profitPct + '%');
-  profit.innerText = Math.round(profit).toLocaleString();
-  leaks.innerText = Math.round(leaks).toLocaleString();
+  flow.style.setProperty('--profit',profitPct+'%');
+  document.getElementById('profit').innerText = Math.round(profit).toLocaleString();
+  document.getElementById('leaks').innerText = Math.round(leaks).toLocaleString();
 
-  const control = Math.max(15, Math.min(85,
-    60
-    - (operation==='platform'?15:0)
-    - (hours>30?15:0)
-    - (idle>8?10:0)
-  ));
+  let control = 60;
+  if(operation==='platform') control -= 15;
+  if(hours>30) control -= 15;
+  if(idle>8) control -= 10;
+  control = Math.max(15,Math.min(85,control));
 
-  controlFill.style.width = control + '%';
+  controlFill.style.width = control+'%';
   document.getElementById('control').innerText = control;
 
-  hourly.innerText = (profit / (hours*4.3 || 1)).toFixed(2);
+  const hourly = profit / ((hours*4.3)||1);
+  document.getElementById('hourly').innerText = hourly.toFixed(2);
 
-  goToStep(4);
+  go(4);
 }
 
-function unlock() {
-  if (!email.value.includes('@')) {
+function unlock(){
+  if(!email.value.includes('@')){
     alert('Enter a valid email');
     return;
   }
@@ -262,4 +268,5 @@ function unlock() {
 
 </body>
 </html>
+
 
