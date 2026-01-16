@@ -103,9 +103,7 @@
       <label>Average booked days per month (per car)</label>
       <input type='range' id='in-days' min='5' max='30' value='15' oninput='document.getElementById("d-val").innerText = this.value'>
       <div style='display:flex; justify-content:space-between;'><span class='micro'>5 days</span><span style='font-weight:bold; color:#2563eb;' id='d-val'>15</span><span class='micro'>30 days</span></div>
-      <p class='micro'>most hosts fall between 12–22</p>
       <button onclick='window.go(2)'>Continue</button>
-      <p class='micro' style='text-align:center;'>Don’t overthink it — estimate honestly.</p>
     </div>
   </div>
 
@@ -114,7 +112,7 @@
       <h2>Platform cut (the part no one likes to talk about)</h2>
       <label>Platform takes: %</label>
       <input type='number' id='in-fees' value='30'>
-      <p class='micro'>Includes host fees, protection plans, adjustments… not opinions.</p>
+      <p class='micro'>Includes host fees, protection plans, and adjustments.</p>
       <button onclick='window.go(3)'>Continue</button>
     </div>
     <div class='card' id='dist-private' style='display:none;'>
@@ -123,7 +121,6 @@
       <button class='btn-opt' onclick='window.go(3)'>Bank transfer</button>
       <button class='btn-opt' onclick='window.go(3)'>Card</button>
       <button class='btn-opt' onclick='window.go(3)'>Mixed</button>
-      <p class='micro'>This affects delays, disputes, and collections.</p>
     </div>
   </div>
 
@@ -136,9 +133,7 @@
       <input type='number' id='in-maint' value='150'>
       <label>Idle / downtime days per month</label>
       <input type='number' id='in-idle' value='5'>
-      <p class='micro'>repairs, cleaning, no bookings</p>
       <button onclick='window.go(4)'>Continue</button>
-      <p class='micro' style='text-align:center;'>These numbers decide whether profit is real or imagined.</p>
     </div>
   </div>
 
@@ -153,7 +148,6 @@
       <button class='btn-opt' onclick='window.calc()'>Staff</button>
       <button class='btn-opt' onclick='window.calc()'>Outsourced</button>
       <button class='btn-opt' onclick='window.calc()'>No one / chaos</button>
-      <p class='micro' style='text-align:center;'>This doesn’t judge hustle — it measures load.</p>
     </div>
   </div>
 
@@ -162,9 +156,9 @@
       <h1 style='font-size:22px;'>Here’s what your car rental business actually produces</h1>
       <p class='subhead'>Based on the numbers you entered — not best-case scenarios.</p>
 
-      <div class='res-card'><p class='micro'>Gross monthly revenue</p><div class='res-val' id='out-gross'>$0</div><p class='micro'>Before fees, downtime, or reality.</p></div>
+      <div class='res-card'><p class='micro'>Gross monthly revenue</p><div class='res-val' id='out-gross'>$0</div></div>
       <div class='res-card'><p class='micro'>Silent leakage</p><div class='res-val leak-val' id='out-leak'>-$0</div><p class='micro'>Platform cuts • idle days • operational friction</p></div>
-      <div class='res-card' style='border-bottom:none;'><p class='micro'>True monthly profit (before paying yourself)</p><div class='res-val' style='color:#16a34a;' id='out-profit'>$0</div><p class='micro'>This is the number that survives real life.</p></div>
+      <div class='res-card' style='border-bottom:none;'><p class='micro'>True monthly profit (before paying yourself)</p><div class='res-val' style='color:#16a34a;' id='out-profit'>$0</div></div>
 
       <div class='hammer'>You’re running a car rental business…<br>but you only control <span id='out-ctrl' style='color:#2563eb;'>0%</span> of the outcome.</div>
       <p style='font-size:14px; color:#475569; text-align:center;'>The rest is decided by platform rules, downtime, payment friction, and how much manual work the operation needs to stay alive.</p>
@@ -175,11 +169,11 @@
         <p class='micro'>Based on the time it takes to keep this running — not just driving revenue.</p>
       </div>
 
-      <div id='dynamic-insight' style='margin-top:25px; font-size:15px; background:#fff7ed; padding:15px; border-radius:8px; border:1px solid #ffedd5;'></div>
+      <div id='dynamic-insight' style='margin-top:25px; font-size:15px; background:#fff7ed; padding:15px; border-radius:8px; border:1px solid #ffedd5; font-weight:500;'></div>
 
       <div id='email-box'>
         <h3>Want to see where this leaks — and what fixes it at your stage?</h3>
-        <p style='font-size:14px;'>I’ll break this down by operator type and show what actually moves the needle — without selling you software or telling you to work harder.</p>
+        <p style='font-size:14px;'>I’ll break this down by operator type and show you the systems that reclaim your time and margin.</p>
         <input type='email' id='email' placeholder='Enter your email'>
         <button onclick='window.save()'>Get my free profit breakdown</button>
         <p class='micro' style='text-align:center;'>One email. No spam. Pure diagnosis.</p>
@@ -197,6 +191,7 @@ let st = { mode: 'platform' };
 window.go = function(n) {
   document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
   document.getElementById('s' + n).classList.add('active');
+  window.scrollTo(0,0);
 };
 
 window.setMode = function(m) {
@@ -231,15 +226,8 @@ window.calc = function() {
   document.getElementById('out-ctrl').innerText = ctrl + '%';
   document.getElementById('out-hourly').innerText = '$' + hourly.toFixed(2) + '/hr';
 
-  let insText = '';
-  if(st.mode === 'platform' || st.mode === 'both') {
-    insText = 'Platforms are excellent for volume. They’re structurally expensive once consistency matters. At small scale, this feels fine. At scale, the margin compression compounds quietly.';
-  } else if(st.mode === 'private') {
-    insText = 'The money isn’t the issue — the workflow is. Manual processes don’t break on day one. They break when volume stops forgiving mistakes.';
-  } else {
-    insText = 'On paper, this looks profitable. In practice, the first 3–6 months are volatile. Cash timing, downtime, and learning curves decide survival — not daily price.';
-  }
-  document.getElementById('dynamic-insight').innerText = insText;
+  document.getElementById('dynamic-insight').innerText = "Scaling a rental fleet is rarely a revenue problem—it's a friction problem. When you lack direct control over your payments, fleet availability, and admin, you aren't building an asset; you're managing a chaotic job.";
+  
   st.res = { gross, profit, hourly };
   window.go(5);
 };
@@ -252,12 +240,12 @@ window.save = async function() {
     await fetch(S_URL + '/rest/v1/leads', {
       method: 'POST',
       headers: { 'apikey': S_KEY, 'Authorization': 'Bearer ' + S_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, profit: st.res.profit, hourly: st.res.hourly })
+      body: JSON.stringify({ email, profit: st.res.profit, hourly: st.res.hourly, operator_type: st.mode })
     });
     document.getElementById('email-box').innerHTML = `
       <div class="success-card">
         <h3 style="color:#16a34a; margin-top:0;">Diagnosis completed</h3>
-        <p style="font-size:14px; color:#475569;">I’ve sent your breakdown. Now, let’s plug those leaks and reclaim your control.</p>
+        <p style="font-size:14px; color:#475569;">Your data has been processed. Now, let’s plug those leaks and reclaim your control with a professional system.</p>
         <a href="YOUR_CALENDLY_LINK" target="_blank" style="text-decoration:none;">
           <button style="background:#16a34a; margin-top:10px;">Book My Free 45-Min Session →</button>
         </a>
