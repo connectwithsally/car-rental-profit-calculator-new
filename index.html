@@ -1,405 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Rental Profit Audit</title>
-    <style>
-        /* core resets */
-        * { box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f1f5f9;
-            color: #334155;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        /* wider container */
-        .app-container {
-            background: #ffffff;
-            width: 100%;
-            max-width: 650px; 
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-            height: fit-content;
-            margin-top: 20px;
-        }
-
-        h1, h2, h3 { color: #0f172a; margin-top: 0; }
-        p { line-height: 1.6; }
-
-        /* navigation steps */
-        .step { display: none; }
-        .step.active { display: block; animation: fadein 0.4s; }
-        
-        @keyframes fadein {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* buttons */
-        .btn-main {
-            background-color: #2563eb;
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 16px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: background 0.2s;
-        }
-        .btn-main:hover { background-color: #1d4ed8; }
-
-        .btn-select {
-            background: #f8fafc;
-            border: 2px solid #e2e8f0;
-            width: 100%;
-            padding: 20px;
-            text-align: left;
-            margin-bottom: 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .btn-select:hover {
-            border-color: #2563eb;
-            background: #eff6ff;
-        }
-
-        /* inputs */
-        input[type="range"] {
-            width: 100%;
-            margin: 10px 0 25px 0;
-            accent-color: #2563eb;
-            cursor: pointer;
-        }
-        input[type="email"] {
-            width: 100%;
-            padding: 14px;
-            border: 2px solid #cbd5e1;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-
-        /* results */
-        .leak-list {
-            margin-top: 20px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 0 15px;
-        }
-        .leak-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px 0;
-            border-bottom: 1px solid #f1f5f9;
-        }
-        .leak-row:last-child { border-bottom: none; }
-        .red-text { color: #dc2626; font-weight: bold; }
-
-        /* visualization */
-        .bar-wrap {
-            height: 30px;
-            background: #e2e8f0;
-            border-radius: 15px;
-            overflow: hidden;
-            margin: 20px 0;
-            display: flex;
-        }
-        .bar-fill {
-            height: 100%;
-            background: #22c55e;
-            width: 0%;
-            transition: width 1s;
-        }
-        .bar-leak {
-            height: 100%;
-            background: #ef4444;
-            flex-grow: 1;
-        }
-
-        /* blurred locked section */
-        .locked-wrapper {
-            position: relative;
-            margin-top: 30px;
-            text-align: center;
-        }
-        .blurred-bg {
-            filter: blur(6px);
-            opacity: 0.5;
-            user-select: none;
-        }
-        .lock-overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            background: rgba(255,255,255,0.9);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-    </style>
+<meta charset="UTF-8">
+<title>Car Rental Profit Control Audit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+/* —— STYLE UNCHANGED —— */
+body {
+  background: #f8fafc;
+  color: #1e293b;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+}
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+}
+.step { display: none; animation: fadeIn 0.4s ease; }
+.step.active { display: block; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+button {
+  width: 100%;
+  padding: 16px;
+  margin-top: 16px;
+  background: #3b82f6;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+}
+input, select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 16px;
+}
+.progress { display: flex; justify-content: center; gap: 8px; margin: 24px 0; }
+.progress-dot { width: 8px; height: 8px; background: #cbd5e1; border-radius: 50%; }
+.progress-dot.active { background: #3b82f6; }
+.blur { filter: blur(6px); position: relative; }
+.blur::after {
+  content: "🔒 Enter email to reveal";
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 2px solid #3b82f6;
+  color: #3b82f6;
+  font-weight: 600;
+}
+</style>
 </head>
+
 <body>
+<div class="container">
 
-<div class="app-container">
+<!-- INTRO -->
+<div class="step active" id="step0">
+  <div class="card" style="text-align:center;">
+    <h1>Car Rental Profit Control Audit</h1>
+    <p>This reveals whether your income is controlled by systems — or by luck.</p>
+    <button onclick="nextStep()">Start the Audit →</button>
+  </div>
+</div>
 
-    <div id="step-0" class="step active">
-        <div style="text-align: center;">
-            <h1 style="font-size: 28px;">🚗 Profit Leak Audit</h1>
-            <p style="color: #64748b; font-size: 18px;">Find out exactly how much profit your rental fleet is losing to hidden inefficiencies.</p>
-            <div style="margin: 30px 0;">
-                <span style="background: #dbeafe; color: #1e40af; padding: 6px 16px; border-radius: 20px; font-size: 14px; font-weight: 600;">Fast • Free • Accurate</span>
-            </div>
-            <button class="btn-main" onclick="goToStep(1)">Start Audit</button>
-        </div>
+<!-- OPERATION -->
+<div class="step" id="step1">
+  <div class="card">
+    <h2>How do you operate?</h2>
+    <button onclick="setOperation('platform')">📱 Platform Host</button>
+    <button onclick="setOperation('private')">🔑 Private Operator</button>
+    <button onclick="setOperation('beginner')">🔍 Planning to Start</button>
+  </div>
+</div>
+
+<!-- VEHICLES -->
+<div class="step" id="step2">
+  <div class="card">
+    <h2>Your Setup</h2>
+    <label>Cars</label>
+    <input type="number" id="cars" value="1" min="1">
+    <label>Daily Rate ($)</label>
+    <input type="number" id="rate" value="75">
+    <label>Booked Days / Month</label>
+    <input type="number" id="days" value="15">
+  </div>
+  <button onclick="nextStep()">Continue →</button>
+</div>
+
+<!-- LEAKS -->
+<div class="step" id="step3">
+  <div class="card">
+    <h2>Where Control Is Lost</h2>
+    <label>Platform / Payment %</label>
+    <input type="number" id="fees" value="25">
+    <label>Idle Days (Unused Capacity)</label>
+    <input type="number" id="idle" value="5">
+    <label>Admin Hours / Week</label>
+    <input type="number" id="hours" value="12">
+  </div>
+  <button onclick="calculateResults()">Reveal Analysis →</button>
+</div>
+
+<!-- RESULTS -->
+<div class="step" id="step4">
+  <div class="card">
+    <h2 style="text-align:center;">Your Control vs Chaos Breakdown</h2>
+
+    <p style="text-align:center;font-weight:600;">
+      Monthly Profit: <span id="profitAmount"></span>
+    </p>
+
+    <p style="text-align:center;color:#dc2626;">
+      Money lost to chaos: <span id="leakAmount"></span>
+    </p>
+
+    <div class="blur" id="hourlyCard">
+      <h3 style="text-align:center;">Effective Hourly Reality</h3>
+      <div style="text-align:center;font-size:28px;" id="hourlyAmount"></div>
     </div>
 
-    <div id="step-1" class="step">
-        <h2>How do you operate?</h2>
-        <p style="color: #64748b; margin-bottom: 20px;">Select your current model.</p>
+    <p style="margin-top:20px;font-weight:600;text-align:center;">
+      Do you want the exact fixes to reclaim control?
+    </p>
 
-        <button class="btn-select" onclick="setMode('platform')">
-            <strong>📱 Platform Host</strong><br>
-            <span style="color: #64748b; font-size: 14px;">Turo, Getaround, etc.</span>
-        </button>
+    <button onclick="interest(true)">Yes — show me how</button>
+    <button onclick="interest(false)" style="background:#e5e7eb;color:#1e293b;">
+      No — I’ll figure it out myself
+    </button>
 
-        <button class="btn-select" onclick="setMode('private')">
-            <strong>🔑 Private / Direct</strong><br>
-            <span style="color: #64748b; font-size: 14px;">Direct bookings, own insurance</span>
-        </button>
-
-        <button class="btn-select" onclick="setMode('planning')">
-            <strong>🚀 Planning to Start</strong><br>
-            <span style="color: #64748b; font-size: 14px;">Researching numbers</span>
-        </button>
+    <div id="emailGate" style="display:none;margin-top:20px;">
+      <input type="email" id="email" placeholder="your@email.com">
+      <button onclick="saveLead()">Unlock Free 45-Min Session</button>
     </div>
-
-    <div id="step-2" class="step">
-        <h2>Fleet Snapshot</h2>
-        
-        <label><strong>Number of Cars:</strong> <span id="txt-cars" style="color: #2563eb;">1</span></label>
-        <input type="range" id="inp-cars" min="1" max="50" value="1" oninput="updateVal('cars', '')">
-
-        <label><strong>Average Daily Rate:</strong> <span id="txt-rate" style="color: #2563eb;">$75</span></label>
-        <input type="range" id="inp-rate" min="20" max="500" value="75" oninput="updateVal('rate', '$')">
-
-        <label><strong>Booked Days per Month:</strong> <span id="txt-days" style="color: #2563eb;">15</span></label>
-        <input type="range" id="inp-days" min="1" max="30" value="15" oninput="updateVal('days', '')">
-
-        <button class="btn-main" onclick="goToStep(3)">Next: Hidden Costs</button>
-    </div>
-
-    <div id="step-3" class="step">
-        <h2>Hidden Costs</h2>
-        
-        <label><strong><span id="lbl-fees">Platform Fees</span>:</strong> <span id="txt-fees" style="color: #dc2626;">25%</span></label>
-        <input type="range" id="inp-fees" min="0" max="40" value="25" oninput="updateVal('fees', '', '%')">
-
-        <label><strong>Idle Days (Repair/Clean):</strong> <span id="txt-idle" style="color: #dc2626;">5</span></label>
-        <input type="range" id="inp-idle" min="0" max="15" value="5" oninput="updateVal('idle', '')">
-
-        <label><strong>Admin Hours / Week:</strong> <span id="txt-hours" style="color: #dc2626;">12</span></label>
-        <input type="range" id="inp-hours" min="0" max="100" value="12" oninput="updateVal('hours', '')">
-
-        <button class="btn-main" onclick="calculate()">Calculate Results</button>
-    </div>
-
-    <div id="step-4" class="step">
-        <h2 style="text-align: center;">Profit Analysis</h2>
-
-        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-            <span>Revenue</span>
-            <span id="res-gross" style="font-weight: bold;">$0</span>
-        </div>
-        <div class="bar-wrap">
-            <div id="bar-profit" class="bar-fill"></div>
-            <div class="bar-leak"></div>
-        </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 25px;">
-            <span style="color: #16a34a; font-weight: bold;">Profit: <span id="res-profit">$0</span></span>
-            <span style="color: #dc2626; font-weight: bold;">Leaks: <span id="res-leak">$0</span></span>
-        </div>
-
-        <div class="leak-list">
-            <div class="leak-row">
-                <span>Fees / Commision</span>
-                <span id="leak-1" class="red-text">$0</span>
-            </div>
-            <div class="leak-row">
-                <span>Idle Time Cost</span>
-                <span id="leak-2" class="red-text">$0</span>
-            </div>
-            <div class="leak-row">
-                <span>Admin Labor</span>
-                <span id="leak-3" class="red-text">$0</span>
-            </div>
-        </div>
-
-        <div id="locked-area" class="locked-wrapper">
-            <div class="blurred-bg">
-                <h3>True Hourly Wage</h3>
-                <h1>$45.00/hr</h1>
-            </div>
-            <div class="lock-overlay">
-                <h3>🔓 Unlock Full Report</h3>
-                <p style="font-size: 14px; color: #64748b;">See your actual hourly wage after leaks.</p>
-                <input type="email" id="email" placeholder="Enter your email address">
-                <button class="btn-main" onclick="submitData()">Show My Wage</button>
-            </div>
-        </div>
-
-        <div id="unlocked-area" style="display: none; text-align: center; margin-top: 30px; background: #f0fdf4; padding: 20px; border-radius: 10px; border: 1px solid #bbf7d0;">
-            <h3>Your True Hourly Wage</h3>
-            <h1 id="res-hourly" style="color: #16a34a; font-size: 40px; margin: 10px 0;">$0.00</h1>
-            <p style="color: #64748b;">This is what you actually take home.</p>
-            <button onclick="location.reload()" style="background: none; border: none; text-decoration: underline; color: #64748b; cursor: pointer; margin-top: 10px;">Start Over</button>
-        </div>
-
-    </div>
+  </div>
+</div>
 
 </div>
 
 <script>
-    // Config
-    const SUPABASE_URL = "https://mfuoltkdoocdpurqytzt.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1mdW9sdGtkb29jZHB1cnF5dHp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MDQ3ODAsImV4cCI6MjA4NDA4MDc4MH0.MVTJr-CJUuuOxqeiLJ0F9tGeXP89krdxiWMdl6Ux6GA";
+const SUPABASE_URL = "https://mfuoltkdoocdpurqytzt.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_KEY";
 
-    // State
-    let state = {
-        mode: 'platform',
-        cars: 1, rate: 75, days: 15,
-        fees: 25, idle: 5, hours: 12,
-        results: {}
-    };
+let userData = {};
 
-    // Navigation
-    window.goToStep = function(n) {
-        document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-        document.getElementById('step-' + n).classList.add('active');
-    };
+function nextStep(){
+  document.querySelector('.step.active').classList.remove('active');
+  document.querySelectorAll('.step')[++window.step||1].classList.add('active');
+}
 
-    // logic for step 1
-    window.setMode = function(m) {
-        state.mode = m;
-        
-        // update defaults based on selection
-        const feeInput = document.getElementById('inp-fees');
-        const feeLabel = document.getElementById('lbl-fees');
-        
-        if(m === 'private') {
-            feeInput.value = 3;
-            feeLabel.innerText = "Processing Fees";
-        } else {
-            feeInput.value = 25;
-            feeLabel.innerText = "Platform Fees";
-        }
-        
-        updateVal('fees', '', '%'); // refresh visual
-        goToStep(2);
-    };
+function setOperation(type){
+  userData.operation = type;
+  nextStep();
+}
 
-    // logic for sliders
-    window.updateVal = function(key, prefix, suffix) {
-        const val = document.getElementById('inp-' + key).value;
-        state[key] = parseInt(val);
-        
-        const txt = document.getElementById('txt-' + key);
-        if(txt) txt.innerText = (prefix || '') + val + (suffix || '');
-    };
+function calculateResults(){
+  userData.cars = +cars.value;
+  userData.rate = +rate.value;
+  userData.days = +days.value;
+  userData.fees = +fees.value;
+  userData.idle = +idle.value;
+  userData.hours = +hours.value;
 
-    // calculation logic
-    window.calculate = function() {
-        const gross = state.cars * state.rate * state.days;
-        
-        const costFees = gross * (state.fees / 100);
-        const costIdle = state.cars * state.rate * state.idle;
-        const costAdmin = state.hours * 4 * 25; // $25/hr opportunity cost
-        
-        const totalLeak = costFees + costIdle + costAdmin;
-        const netProfit = gross - totalLeak;
-        
-        // protect against negative profit
-        const safeProfit = netProfit > 0 ? netProfit : 0;
-        const profitPercent = (safeProfit / gross) * 100;
-        
-        // Hourly calc
-        const workedHours = state.hours * 4;
-        let hourly = 0;
-        if(workedHours > 0) hourly = netProfit / workedHours;
-        
-        // update UI
-        document.getElementById('res-gross').innerText = '$' + gross.toLocaleString();
-        document.getElementById('res-profit').innerText = '$' + Math.round(netProfit).toLocaleString();
-        document.getElementById('res-leak').innerText = '$' + Math.round(totalLeak).toLocaleString();
-        
-        document.getElementById('leak-1').innerText = '-$' + Math.round(costFees).toLocaleString();
-        document.getElementById('leak-2').innerText = '-$' + Math.round(costIdle).toLocaleString();
-        document.getElementById('leak-3').innerText = '-$' + Math.round(costAdmin).toLocaleString();
-        
-        document.getElementById('bar-profit').style.width = profitPercent + "%";
-        document.getElementById('res-hourly').innerText = '$' + hourly.toFixed(2) + '/hr';
-        
-        // save to state for db
-        state.results = { gross, netProfit, hourly };
-        
-        goToStep(4);
-    };
+  const gross = userData.cars * userData.rate * userData.days;
 
-    // database logic
-    window.submitData = async function() {
-        const email = document.getElementById('email').value;
-        if(!email || !email.includes('@')) {
-            alert('Please enter a valid email');
-            return;
-        }
+  const feeLeak = gross * (userData.fees/100);
+  const idleLeak = userData.cars * userData.rate * (userData.idle * 0.4);
+  const adminLeak = userData.operation === 'beginner' ? 0 : userData.hours * 4.33 * 30;
 
-        const btn = document.querySelector('button[onclick="submitData()"]');
-        btn.innerText = "Processing...";
+  const totalLeaks = feeLeak + idleLeak + adminLeak;
+  const profit = Math.max(gross - totalLeaks, 0);
+  const hourly = userData.hours ? profit / (userData.hours*4.33) : profit;
 
-        try {
-            await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
-                method: "POST",
-                headers: {
-                    "apikey": SUPABASE_KEY,
-                    "Authorization": `Bearer ${SUPABASE_KEY}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email: email,
-                    operator_type: state.mode,
-                    cars: state.cars,
-                    gross: state.results.gross,
-                    profit: state.results.netProfit,
-                    hourly: parseFloat(state.results.hourly.toFixed(2))
-                })
-            });
+  profitAmount.textContent = `$${profit.toFixed(0)}`;
+  leakAmount.textContent = `$${totalLeaks.toFixed(0)}`;
+  hourlyAmount.textContent = `$${hourly.toFixed(2)}/hour`;
 
-            // success
-            document.getElementById('locked-area').style.display = 'none';
-            document.getElementById('unlocked-area').style.display = 'block';
+  nextStep();
+}
 
-        } catch(err) {
-            console.error(err);
-            // fallback if db fails, still show user results
-            document.getElementById('locked-area').style.display = 'none';
-            document.getElementById('unlocked-area').style.display = 'block';
-        }
-    };
+function interest(val){
+  if(val){
+    document.getElementById('emailGate').style.display='block';
+    document.getElementById('hourlyCard').classList.remove('blur');
+  }
+}
+
+async function saveLead(){
+  const email = document.getElementById('email').value;
+  if(!email.includes('@')) return alert('Enter valid email');
+
+  await fetch(`${SUPABASE_URL}/rest/v1/leads`,{
+    method:'POST',
+    headers:{
+      apikey:SUPABASE_ANON_KEY,
+      Authorization:`Bearer ${SUPABASE_ANON_KEY}`,
+      'Content-Type':'application/json'
+    },
+    body:JSON.stringify({...userData,email})
+  });
+
+  alert('Session unlocked. Check your email.');
+}
 </script>
-
 </body>
 </html>
+
 
 
