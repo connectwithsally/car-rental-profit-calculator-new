@@ -5,222 +5,209 @@
 <title>Car Rental Profit Control Audit</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-/* —— STYLE UNCHANGED —— */
-body {
-  background: #f8fafc;
-  color: #1e293b;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  margin: 0;
-  min-height: 100vh;
-}
-.container {
-  max-width: 600px;
-  margin: auto;
-  padding: 20px;
-}
-.step { display: none; animation: fadeIn 0.4s ease; }
-.step.active { display: block; }
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.card {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 20px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-button {
-  width: 100%;
-  padding: 16px;
-  margin-top: 16px;
-  background: #3b82f6;
-  border: none;
-  color: white;
-  font-size: 16px;
-  font-weight: 500;
-  border-radius: 8px;
-  cursor: pointer;
-}
-input, select {
-  width: 100%;
-  padding: 12px;
-  margin-top: 8px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  font-size: 16px;
-}
-.progress { display: flex; justify-content: center; gap: 8px; margin: 24px 0; }
-.progress-dot { width: 8px; height: 8px; background: #cbd5e1; border-radius: 50%; }
-.progress-dot.active { background: #3b82f6; }
-.blur { filter: blur(6px); position: relative; }
-.blur::after {
-  content: "🔒 Enter email to reveal";
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  padding: 8px 16px;
-  border-radius: 8px;
-  border: 2px solid #3b82f6;
-  color: #3b82f6;
-  font-weight: 600;
-}
+  body {
+    background: #f8fafc;
+    color: #1e293b;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  .container { width: 100%; max-width: 550px; padding: 20px; }
+  .step { display: none; animation: fadeIn 0.4s ease; }
+  .step.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  }
+  h1 { font-size: 24px; margin-bottom: 10px; text-align: center; }
+  button {
+    width: 100%;
+    padding: 16px;
+    margin-top: 12px;
+    background: #3b82f6;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .btn-sec { background: #f1f5f9; color: #1e293b; border: 1px solid #cbd5e1; }
+  input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    box-sizing: border-box;
+  }
+  .blur { filter: blur(6px); opacity: 0.4; pointer-events: none; }
+  .res-box { text-align: center; padding: 15px; background: #fdf2f2; border-radius: 8px; margin: 10px 0; }
 </style>
 </head>
-
 <body>
+
 <div class="container">
-
-<!-- INTRO -->
-<div class="step active" id="step0">
-  <div class="card" style="text-align:center;">
-    <h1>Car Rental Profit Control Audit</h1>
-    <p>This reveals whether your income is controlled by systems — or by luck.</p>
-    <button onclick="nextStep()">Start the Audit →</button>
-  </div>
-</div>
-
-<!-- OPERATION -->
-<div class="step" id="step1">
-  <div class="card">
-    <h2>How do you operate?</h2>
-    <button onclick="setOperation('platform')">📱 Platform Host</button>
-    <button onclick="setOperation('private')">🔑 Private Operator</button>
-    <button onclick="setOperation('beginner')">🔍 Planning to Start</button>
-  </div>
-</div>
-
-<!-- VEHICLES -->
-<div class="step" id="step2">
-  <div class="card">
-    <h2>Your Setup</h2>
-    <label>Cars</label>
-    <input type="number" id="cars" value="1" min="1">
-    <label>Daily Rate ($)</label>
-    <input type="number" id="rate" value="75">
-    <label>Booked Days / Month</label>
-    <input type="number" id="days" value="15">
-  </div>
-  <button onclick="nextStep()">Continue →</button>
-</div>
-
-<!-- LEAKS -->
-<div class="step" id="step3">
-  <div class="card">
-    <h2>Where Control Is Lost</h2>
-    <label>Platform / Payment %</label>
-    <input type="number" id="fees" value="25">
-    <label>Idle Days (Unused Capacity)</label>
-    <input type="number" id="idle" value="5">
-    <label>Admin Hours / Week</label>
-    <input type="number" id="hours" value="12">
-  </div>
-  <button onclick="calculateResults()">Reveal Analysis →</button>
-</div>
-
-<!-- RESULTS -->
-<div class="step" id="step4">
-  <div class="card">
-    <h2 style="text-align:center;">Your Control vs Chaos Breakdown</h2>
-
-    <p style="text-align:center;font-weight:600;">
-      Monthly Profit: <span id="profitAmount"></span>
-    </p>
-
-    <p style="text-align:center;color:#dc2626;">
-      Money lost to chaos: <span id="leakAmount"></span>
-    </p>
-
-    <div class="blur" id="hourlyCard">
-      <h3 style="text-align:center;">Effective Hourly Reality</h3>
-      <div style="text-align:center;font-size:28px;" id="hourlyAmount"></div>
-    </div>
-
-    <p style="margin-top:20px;font-weight:600;text-align:center;">
-      Do you want the exact fixes to reclaim control?
-    </p>
-
-    <button onclick="interest(true)">Yes — show me how</button>
-    <button onclick="interest(false)" style="background:#e5e7eb;color:#1e293b;">
-      No — I’ll figure it out myself
-    </button>
-
-    <div id="emailGate" style="display:none;margin-top:20px;">
-      <input type="email" id="email" placeholder="your@email.com">
-      <button onclick="saveLead()">Unlock Free 45-Min Session</button>
+  <div class="step active" id="step0">
+    <div class="card">
+      <h1>Car Rental Profit Control Audit</h1>
+      <p style="text-align:center; color: #64748b;">reveal if your income is controlled by systems or by luck.</p>
+      <button onclick="window.go(1)">Start the Audit →</button>
     </div>
   </div>
-</div>
 
+  <div class="step" id="step1">
+    <div class="card">
+      <h2>How do you operate?</h2>
+      <button class="btn-sec" onclick="window.setOp('platform')">📱 Platform Host (Turo/etc)</button>
+      <button class="btn-sec" onclick="window.setOp('private')">🔑 Private Operator</button>
+      <button class="btn-sec" onclick="window.setOp('beginner')">🔍 Planning to Start</button>
+    </div>
+  </div>
+
+  <div class="step" id="step2">
+    <div class="card">
+      <h2>Your Setup</h2>
+      <label>Number of Cars</label>
+      <input type="number" id="cars" value="1">
+      <label>Daily Rate ($)</label>
+      <input type="number" id="rate" value="75">
+      <label>Booked Days / Month</label>
+      <input type="number" id="days" value="15">
+      <button onclick="window.go(3)">Continue →</button>
+    </div>
+  </div>
+
+  <div class="step" id="step3">
+    <div class="card">
+      <h2>Where Control Is Lost</h2>
+      <label>Platform / Fees %</label>
+      <input type="number" id="fees" value="25">
+      <label>Idle Days (Repairs/Cleaning)</label>
+      <input type="number" id="idle" value="5">
+      <label>Admin Hours / Week</label>
+      <input type="number" id="hours" value="12">
+      <button onclick="window.calc()">Reveal Analysis →</button>
+    </div>
+  </div>
+
+  <div class="step" id="step4">
+    <div class="card">
+      <h2 style="text-align:center;">Control vs Chaos</h2>
+      
+      <div style="text-align:center; margin-bottom: 15px;">
+        <span style="font-weight:700;">Monthly Profit:</span>
+        <span id="res-profit" style="color: #16a34a; font-size: 20px;">$0</span>
+      </div>
+
+      <div class="res-box">
+        <span style="color: #dc2626; font-weight:600;">Money lost to chaos: </span>
+        <span id="res-leak" style="color: #dc2626; font-weight:700;">$0</span>
+      </div>
+
+      <div id="hourly-wrap" class="blur" style="margin-top: 20px; text-align: center; border: 1px dashed #cbd5e1; padding: 15px;">
+        <h3>Effective Hourly Reality</h3>
+        <div id="res-hourly" style="font-size: 28px; font-weight: 800;">$0.00/hr</div>
+      </div>
+
+      <p style="text-align:center; margin: 20px 0 10px; font-weight: 600;">Want the exact fixes to reclaim control?</p>
+      
+      <div id="cta-buttons">
+        <button onclick="window.showEmail()">Yes — show me how</button>
+        <button class="btn-sec" onclick="location.reload()">No — I will figure it out</button>
+      </div>
+
+      <div id="email-gate" style="display:none; margin-top: 15px;">
+        <input type="email" id="email" placeholder="your@email.com">
+        <button onclick="window.save()">Unlock Free 45-Min Session</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-const SUPABASE_URL = "https://mfuoltkdoocdpurqytzt.supabase.co";
-const SUPABASE_ANON_KEY = "YOUR_KEY";
+const S_URL = "https://mfuoltkdoocdpurqytzt.supabase.co";
+const S_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1mdW9sdGtkb29jZHB1cnF5dHp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MDQ3ODAsImV4cCI6MjA4NDA4MDc4MH0.MVTJr-CJUuuOxqeiLJ0F9tGeXP89krdxiWMdl6Ux6GA";
 
-let userData = {};
+let data = { op: 'platform' };
 
-function nextStep(){
-  document.querySelector('.step.active').classList.remove('active');
-  document.querySelectorAll('.step')[++window.step||1].classList.add('active');
-}
+window.go = function(s) {
+  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+  document.getElementById('step' + s).classList.add('active');
+};
 
-function setOperation(type){
-  userData.operation = type;
-  nextStep();
-}
+window.setOp = function(t) {
+  data.op = t;
+  window.go(2);
+};
 
-function calculateResults(){
-  userData.cars = +cars.value;
-  userData.rate = +rate.value;
-  userData.days = +days.value;
-  userData.fees = +fees.value;
-  userData.idle = +idle.value;
-  userData.hours = +hours.value;
+window.calc = function() {
+  const c = +document.getElementById('cars').value;
+  const r = +document.getElementById('rate').value;
+  const d = +document.getElementById('days').value;
+  const f = +document.getElementById('fees').value;
+  const i = +document.getElementById('idle').value;
+  const h = +document.getElementById('hours').value;
 
-  const gross = userData.cars * userData.rate * userData.days;
+  const gross = c * r * d;
+  const feeLeak = gross * (f/100);
+  const idleLeak = c * r * (i * 0.4); 
+  const adminLeak = data.op === 'beginner' ? 0 : h * 4.33 * 30;
 
-  const feeLeak = gross * (userData.fees/100);
-  const idleLeak = userData.cars * userData.rate * (userData.idle * 0.4);
-  const adminLeak = userData.operation === 'beginner' ? 0 : userData.hours * 4.33 * 30;
+  const totalLeak = feeLeak + idleLeak + adminLeak;
+  const profit = Math.max(gross - totalLeak, 0);
+  const hourly = h > 0 ? profit / (h * 4.33) : 0;
 
-  const totalLeaks = feeLeak + idleLeak + adminLeak;
-  const profit = Math.max(gross - totalLeaks, 0);
-  const hourly = userData.hours ? profit / (userData.hours*4.33) : profit;
+  document.getElementById('res-profit').innerText = '$' + Math.round(profit).toLocaleString();
+  document.getElementById('res-leak').innerText = '$' + Math.round(totalLeak).toLocaleString();
+  document.getElementById('res-hourly').innerText = '$' + hourly.toFixed(2) + '/hr';
+  
+  data = { ...data, c, r, d, f, i, h, profit, hourly, gross };
+  window.go(4);
+};
 
-  profitAmount.textContent = `$${profit.toFixed(0)}`;
-  leakAmount.textContent = `$${totalLeaks.toFixed(0)}`;
-  hourlyAmount.textContent = `$${hourly.toFixed(2)}/hour`;
+window.showEmail = function() {
+  document.getElementById('cta-buttons').style.display = 'none';
+  document.getElementById('email-gate').style.display = 'block';
+  document.getElementById('hourly-wrap').classList.remove('blur');
+};
 
-  nextStep();
-}
-
-function interest(val){
-  if(val){
-    document.getElementById('emailGate').style.display='block';
-    document.getElementById('hourlyCard').classList.remove('blur');
-  }
-}
-
-async function saveLead(){
+window.save = async function() {
   const email = document.getElementById('email').value;
-  if(!email.includes('@')) return alert('Enter valid email');
+  if(!email.includes('@')) return alert('valid email please');
 
-  await fetch(`${SUPABASE_URL}/rest/v1/leads`,{
-    method:'POST',
-    headers:{
-      apikey:SUPABASE_ANON_KEY,
-      Authorization:`Bearer ${SUPABASE_ANON_KEY}`,
-      'Content-Type':'application/json'
-    },
-    body:JSON.stringify({...userData,email})
-  });
-
-  alert('Session unlocked. Check your email.');
-}
+  try {
+    await fetch(S_URL + "/rest/v1/leads", {
+      method: 'POST',
+      headers: {
+        'apikey': S_KEY,
+        'Authorization': 'Bearer ' + S_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email,
+        operator_type: data.op,
+        cars: data.c,
+        gross: data.gross,
+        profit: data.profit,
+        hourly: data.hourly
+      })
+    });
+    alert('Session unlocked. check your email.');
+  } catch(e) {
+    alert('Analysis saved.');
+  }
+};
 </script>
 </body>
 </html>
