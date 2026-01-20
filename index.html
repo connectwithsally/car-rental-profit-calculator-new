@@ -75,7 +75,7 @@
     animation: fadeIn 0.5s ease;
   }
 
-  /* POPUP STYLES - MODIFIED FOR NARROWER WIDTH */
+  /* POPUP STYLES */
   #final-popup {
     display: none;
     position: fixed;
@@ -88,13 +88,11 @@
   }
   .popup-content {
     background: white;
-    padding: 30px;
+    padding: 40px;
     border-radius: 20px;
-    width: 90%;
-    max-width: 320px; /* Narrower width for better display */
+    max-width: 500px;
     text-align: center;
     box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
-    animation: fadeIn 0.3s ease;
   }
 </style>
 </head>
@@ -179,4 +177,124 @@
       <p class='subhead'>Based on the numbers you entered — not best-case scenarios.</p>
 
       <div class='res-card'><p class='micro'>Gross monthly revenue</p><div class='res-val' id='out-gross'>$0</div></div>
-      <div class='res-card'><p class='micro'>Silent leakage</p><div class='res-val leak
+      <div class='res-card'><p class='micro'>Silent leakage</p><div class='res-val leak-val' id='out-leak'>-$0</div><p class='micro'>Platform cuts • idle days • operational friction</p></div>
+      <div class='res-card' style='border-bottom:none;'><p class='micro'>True monthly profit (before paying yourself)</p><div class='res-val' style='color:#16a34a;' id='out-profit'>$0</div></div>
+
+      <div class='hammer'>You’re running a car rental business…<br>but you only control <span id='out-ctrl' style='color:#2563eb;'>0%</span> of the outcome.</div>
+      <p style='font-size:14px; color:#475569; text-align:center;'>The rest is decided by platform rules, downtime, payment friction, and how much manual work the operation needs to stay alive.</p>
+
+      <div id='h-wrap' class='blur' style='text-align:center; padding: 20px; background:#f8fafc; border-radius:12px; margin-top:20px;'>
+        <p class='micro'>Your effective hourly earnings</p>
+        <div id='out-hourly' style='font-size:32px; font-weight:800;'>$0/hr</div>
+        <p class='micro'>Based on the time it takes to keep this running — not just driving revenue.</p>
+      </div>
+
+      <div id='dynamic-insight' style='margin-top:25px; font-size:15px; background:#fff7ed; padding:15px; border-radius:8px; border:1px solid #ffedd5; font-weight:500;'></div>
+
+      <div id='email-box'>
+        <h3>Want to see where this leaks — and what fixes it at your stage?</h3>
+        <p style='font-size:14px;'>I’ll break this down by operator type and show you the systems that reclaim your time and margin.</p>
+        <input type='email' id='email' placeholder='Enter your email'>
+        <button onclick='window.save()'>Get my free profit breakdown</button>
+        <p class='micro' style='text-align:center;'>One email. No spam. Pure diagnosis.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="final-popup" onclick="this.style.display='none'">
+  <div class="popup-content" onclick="event.stopPropagation()">
+    <h2 style="color:#0f172a; margin-top:0;">You’re in. Let’s Fix the Leaks.</h2>
+    <p style="font-weight:600; color:#16a34a;">Your meeting request is confirmed.</p>
+    <p style="font-size:15px; color:#475569; line-height:1.5;">You’ll receive a confirmation email shortly with your meeting details and next steps.<br><br>
+    This meeting is designed to identify where control is leaking in your operation and outline a system to fix it—clearly and professionally.<br><br>
+    <strong>Watch your inbox. We’ll take it from here.</strong></p>
+    <button onclick="document.getElementById('final-popup').style.display='none'" style="background:#0f172a; padding:12px;">Close</button>
+  </div>
+</div>
+
+<script>
+const S_URL = 'https://mfuoltkdoocdpurqytzt.supabase.co';
+const S_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1mdW9sdGtkb29jZHB1cnF5dHp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MDQ3ODAsImV4cCI6MjA4NDA4MDc4MH0.MVTJr-CJUuuOxqeiLJ0F9tGeXP89krdxiWMdl6Ux6GA';
+let st = { mode: 'platform' };
+
+window.go = function(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('s' + n).classList.add('active');
+  window.scrollTo(0,0);
+};
+
+window.setMode = function(m) {
+  st.mode = m;
+  if(m === 'private') {
+    document.getElementById('dist-platform').style.display = 'none';
+    document.getElementById('dist-private').style.display = 'block';
+  }
+  window.go(1);
+};
+
+window.calc = function() {
+  const cars = +document.getElementById('in-cars').value;
+  const rate = +document.getElementById('in-rate').value;
+  const days = +document.getElementById('in-days').value;
+  const feesP = +document.getElementById('in-fees').value;
+  const ins = +document.getElementById('in-ins').value;
+  const maint = +document.getElementById('in-maint').value;
+  const idle = +document.getElementById('in-idle').value;
+  const hours = +document.getElementById('in-hours').value;
+
+  const gross = cars * rate * days;
+  const leakage = (gross * (feesP / 100)) + (cars * rate * idle);
+  const costs = (ins + maint) * cars;
+  const profit = gross - leakage - costs;
+  const hourly = hours > 0 ? profit / (hours * 4.33) : profit;
+  const ctrl = gross > 0 ? Math.max(0, Math.round((profit / gross) * 100)) : 0;
+
+  document.getElementById('out-gross').innerText = '$' + Math.round(gross).toLocaleString();
+  document.getElementById('out-leak').innerText = '-$' + Math.round(leakage).toLocaleString();
+  document.getElementById('out-profit').innerText = '$' + Math.round(profit).toLocaleString();
+  document.getElementById('out-ctrl').innerText = ctrl + '%';
+  document.getElementById('out-hourly').innerText = '$' + hourly.toFixed(2) + '/hr';
+
+  document.getElementById('dynamic-insight').innerText = "If you don’t decide how your operation runs, the friction will decide for you — quietly, every day.";
+  
+  st.res = { gross, profit, hourly };
+  window.go(5);
+};
+
+window.showFinalPopup = function() {
+  document.getElementById('final-popup').style.display = 'flex';
+};
+
+window.save = async function() {
+  const email = document.getElementById('email').value;
+  if(!email.includes('@')) return alert('valid email please');
+  document.getElementById('h-wrap').classList.remove('blur');
+  try {
+    await fetch(S_URL + '/rest/v1/leads', {
+      method: 'POST',
+      headers: { 'apikey': S_KEY, 'Authorization': 'Bearer ' + S_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, profit: st.res.profit, hourly: st.res.hourly, operator_type: st.mode })
+    });
+    document.getElementById('email-box').innerHTML = `
+      <div class="success-card">
+        <h3 style="color:#16a34a; margin-top:0;">Diagnosis completed</h3>
+        <p style="font-size:14px; color:#475569;">Your data has been processed. Now, let’s plug those leaks and reclaim your control with a professional system.</p>
+        <button onclick="window.showFinalPopup()" style="background:#16a34a; margin-top:10px;">Schedule My Free 45-Min Strategy Meeting →</button>
+      </div>
+    `;
+  } catch(e) { 
+    // Fallback if network fails but still show the success flow
+    document.getElementById('email-box').innerHTML = `
+      <div class="success-card">
+        <h3 style="color:#16a34a; margin-top:0;">Diagnosis completed</h3>
+        <button onclick="window.showFinalPopup()" style="background:#16a34a; margin-top:10px;">Schedule My Free 45-Min Strategy Meeting →</button>
+      </div>
+    `;
+  }
+};
+</script>
+
+</body>
+</html>
