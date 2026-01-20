@@ -1,258 +1,85 @@
-<!DOCTYPE html>
-<html lang='en'>
-<head>
-<meta charset='UTF-8'>
-<title>Car Rental Profit Reality Check</title>
-<meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<style>
-  body {
-    background: #f8fafc;
-    color: #1e293b;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    min-height: 100vh;
-  }
-  .container { width: 100%; max-width: 580px; padding: 20px; }
-  .step { display: none; animation: fadeIn 0.4s ease; }
-  .step.active { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  
-  .card {
-    background: white;
-    border-radius: 16px;
-    padding: 32px;
-    margin-bottom: 20px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-  }
-  
-  h1 { font-size: 26px; margin-bottom: 8px; text-align: center; color: #0f172a; }
-  .subhead { text-align: center; color: #64748b; margin-bottom: 24px; font-size: 16px; }
-  
-  button {
-    width: 100%;
-    padding: 18px;
-    margin-top: 12px;
-    background: #2563eb;
-    color: white;
-    border: none;
-    font-size: 16px;
-    font-weight: 600;
-    border-radius: 10px;
-    cursor: pointer;
-  }
-  .btn-opt { background: #fff; color: #334155; border: 2px solid #e2e8f0; text-align: left; }
-  .btn-opt:hover { border-color: #2563eb; background: #f8faff; }
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
-  label { font-weight: 600; font-size: 14px; color: #475569; display: block; margin-top: 16px; }
-  input {
-    width: 100%;
-    padding: 14px;
-    margin: 8px 0 4px;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    font-size: 16px;
-    box-sizing: border-box;
-  }
-  .micro { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+export default function SpaceFunnelPage() {
+  return (
+    <div className="min-h-screen bg-black text-white px-6 py-12 flex items-center justify-center">
+      <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-10">
 
-  .res-card { text-align: center; padding: 20px; border-bottom: 1px solid #f1f5f9; }
-  .res-val { font-size: 32px; font-weight: 800; color: #0f172a; margin: 8px 0; }
-  .leak-val { color: #dc2626; }
-  .hammer { font-weight: 700; font-size: 20px; text-align: center; margin: 30px 0 10px; }
-  .blur { filter: blur(5px); opacity: 0.3; pointer-events: none; }
-  #email-box { background: #f1f5f9; padding: 20px; border-radius: 12px; margin-top: 20px; }
-  
-  .success-card {
-    text-align: center;
-    padding: 24px;
-    background: #fff;
-    border: 2px solid #16a34a;
-    border-radius: 12px;
-    margin-top: 20px;
-    animation: fadeIn 0.5s ease;
-  }
-</style>
-</head>
-<body>
+        {/* LEFT: BRAND + STORY */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="space-y-6"
+        >
+          <p className="text-sm uppercase tracking-widest text-gray-400">Welcome to Space</p>
 
-<div class='container'>
+          <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+            Turn fleets into <span className="text-indigo-400">Space-level cashflow</span>
+          </h1>
 
-  <div class='step active' id='s0'>
-    <div class='card'>
-      <h1>Car Rental Profit Reality Check</h1>
-      <p class='subhead'>See what one car actually earns — after the silent leaks.</p>
-      <p style='font-weight:600; margin-bottom:12px;'>How do you rent cars today?</p>
-      <button class='btn-opt' onclick='window.setMode("platform")'>I rent on a platform (Turo, etc.)</button>
-      <button class='btn-opt' onclick='window.setMode("private")'>I rent privately / direct</button>
-      <button class='btn-opt' onclick='window.setMode("both")'>I do both</button>
-      <button class='btn-opt' onclick='window.setMode("beginner")'>I’m planning to start</button>
-      <p class='micro' style='text-align:center; margin-top:20px;'>Takes about 60 seconds. No login. No fluff.</p>
-    </div>
-  </div>
+          <p className="text-lg text-gray-300">
+            Hi, I’m <span className="font-semibold text-white">Ava</span> 👩‍🚀 — your guide to rental systems & software plays.
+            I don’t motivate. I measure.
+          </p>
 
-  <div class='step' id='s1'>
-    <div class='card'>
-      <h2>Let’s start with the obvious numbers</h2>
-      <label>Number of cars</label>
-      <input type='number' id='in-cars' value='1'>
-      <label>Average daily price per car</label>
-      <input type='number' id='in-rate' value='75'>
-      <label>Average booked days per month (per car)</label>
-      <input type='range' id='in-days' min='5' max='30' value='15' oninput='document.getElementById("d-val").innerText = this.value'>
-      <div style='display:flex; justify-content:space-between;'><span class='micro'>5 days</span><span style='font-weight:bold; color:#2563eb;' id='d-val'>15</span><span class='micro'>30 days</span></div>
-      <button onclick='window.go(2)'>Continue</button>
-    </div>
-  </div>
+          <Card className="bg-zinc-900 border-zinc-800">
+            <CardContent className="p-6 space-y-4">
+              <p className="text-gray-300">
+                Most private fleet owners think their issue is demand.
+                It’s not.
+              </p>
+              <p className="text-gray-400">
+                It’s profit leakage, blind spots, and zero operational control.
+              </p>
+              <p className="text-gray-200 font-semibold">
+                Space exposes the gap between where your fleet is — and where it should be.
+              </p>
+            </CardContent>
+          </Card>
 
-  <div class='step' id='s2'>
-    <div class='card' id='dist-platform'>
-      <h2>Platform cut (the part no one likes to talk about)</h2>
-      <label>Platform takes: %</label>
-      <input type='number' id='in-fees' value='30'>
-      <p class='micro'>Includes host fees, protection plans, and adjustments.</p>
-      <button onclick='window.go(3)'>Continue</button>
-    </div>
-    <div class='card' id='dist-private' style='display:none;'>
-      <h2>How do customers usually pay you?</h2>
-      <button class='btn-opt' onclick='window.go(3)'>Cash</button>
-      <button class='btn-opt' onclick='window.go(3)'>Bank transfer</button>
-      <button class='btn-opt' onclick='window.go(3)'>Card</button>
-      <button class='btn-opt' onclick='window.go(3)'>Mixed</button>
-    </div>
-  </div>
+          <div className="pt-4">
+            <p className="text-sm text-gray-400">CEO: Space</p>
+          </div>
+        </motion.div>
 
-  <div class='step' id='s3'>
-    <div class='card'>
-      <h2>Monthly costs per car (rough averages)</h2>
-      <label>Insurance (monthly)</label>
-      <input type='number' id='in-ins' value='200'>
-      <label>Maintenance + wear (monthly average)</label>
-      <input type='number' id='in-maint' value='150'>
-      <label>Idle / downtime days per month</label>
-      <input type='number' id='in-idle' value='5'>
-      <button onclick='window.go(4)'>Continue</button>
-    </div>
-  </div>
+        {/* RIGHT: CALCULATOR */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          <Card className="bg-zinc-900 border-zinc-800 shadow-xl">
+            <CardContent className="p-6 space-y-6">
+              <h2 className="text-2xl font-semibold">Analyze Your Space-Gap</h2>
+              <p className="text-gray-400 text-sm">
+                This is not a projection. This is a reality check.
+              </p>
 
-  <div class='step' id='s4'>
-    <div class='card'>
-      <h2>One last thing people forget</h2>
-      <label>Hours per week spent on admin</label>
-      <input type='number' id='in-hours' value='12'>
-      <p class='micro'>messages, check-ins, claims, payments</p>
-      <label>Who handles this today?</label>
-      <button class='btn-opt' onclick='window.calc()'>Me</button>
-      <button class='btn-opt' onclick='window.calc()'>Staff</button>
-      <button class='btn-opt' onclick='window.calc()'>Outsourced</button>
-      <button class='btn-opt' onclick='window.calc()'>No one / chaos</button>
-    </div>
-  </div>
+              {/* CALCULATOR EMBED SLOT */}
+              <div className="w-full h-[420px] rounded-xl border border-dashed border-zinc-700 flex items-center justify-center bg-black">
+                <p className="text-gray-500 text-sm text-center px-6">
+                  Embed your Space Reality Check Calculator here
+                  <br />
+                  (iframe or component)
+                </p>
+              </div>
 
-  <div class='step' id='s5'>
-    <div class='card'>
-      <h1 style='font-size:22px;'>Here’s What Your Car Rental Business Actually Produces</h1>
-      <p class='subhead'>Based on the numbers you entered — not best-case scenarios.</p>
+              <Button className="w-full bg-indigo-500 hover:bg-indigo-600 text-black font-semibold py-6 text-lg">
+                Reveal My Real Numbers
+              </Button>
 
-      <div class='res-card'><p class='micro'>Gross monthly revenue</p><div class='res-val' id='out-gross'>$0</div></div>
-      <div class='res-card'><p class='micro'>Silent leakage</p><div class='res-val leak-val' id='out-leak'>-$0</div><p class='micro'>Platform cuts • idle days • operational friction</p></div>
-      <div class='res-card' style='border-bottom:none;'><p class='micro'>True monthly profit (before paying yourself)</p><div class='res-val' style='color:#16a34a;' id='out-profit'>$0</div></div>
+              <p className="text-xs text-gray-500 text-center">
+                If the numbers hurt — good. That means you’re finally seeing the truth.
+              </p>
+            </CardContent>
+          </Card>
+        </motion.div>
 
-      <div class='hammer'>You’re running a car rental business…<br>but you only control <span id='out-ctrl' style='color:#2563eb;'>0%</span> of the outcome.</div>
-      <p style='font-size:14px; color:#475569; text-align:center;'>The rest is decided by platform rules, downtime, payment friction, and how much manual work the operation needs to stay alive.</p>
-
-      <div id='h-wrap' class='blur' style='text-align:center; padding: 20px; background:#f8fafc; border-radius:12px; margin-top:20px;'>
-        <p class='micro'>Your effective hourly earnings</p>
-        <div id='out-hourly' style='font-size:32px; font-weight:800;'>$0/hr</div>
-        <p class='micro'>Based on the time it takes to keep this running — not just driving revenue.</p>
-      </div>
-
-      <div id='dynamic-insight' style='margin-top:25px; font-size:15px; background:#fff7ed; padding:15px; border-radius:8px; border:1px solid #ffedd5; font-weight:500;'></div>
-
-      <div id='email-box'>
-        <h3>Want to see where this leaks — and what fixes it at your stage?</h3>
-        <p style='font-size:14px;'>I’ll break this down by operator type and show you the systems that reclaim your time and margin.</p>
-        <input type='email' id='email' placeholder='Enter your email'>
-        <button onclick='window.save()'>Get my free profit breakdown</button>
-        <p class='micro' style='text-align:center;'>One email. No spam. Pure diagnosis.</p>
       </div>
     </div>
-  </div>
+  );
+}
 
-</div>
-
-<script>
-const S_URL = 'https://mfuoltkdoocdpurqytzt.supabase.co';
-const S_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1mdW9sdGtkb29jZHB1cnF5dHp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MDQ3ODAsImV4cCI6MjA4NDA4MDc4MH0.MVTJr-CJUuuOxqeiLJ0F9tGeXP89krdxiWMdl6Ux6GA';
-let st = { mode: 'platform' };
-
-window.go = function(n) {
-  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-  document.getElementById('s' + n).classList.add('active');
-  window.scrollTo(0,0);
-};
-
-window.setMode = function(m) {
-  st.mode = m;
-  if(m === 'private') {
-    document.getElementById('dist-platform').style.display = 'none';
-    document.getElementById('dist-private').style.display = 'block';
-  }
-  window.go(1);
-};
-
-window.calc = function() {
-  const cars = +document.getElementById('in-cars').value;
-  const rate = +document.getElementById('in-rate').value;
-  const days = +document.getElementById('in-days').value;
-  const feesP = +document.getElementById('in-fees').value;
-  const ins = +document.getElementById('in-ins').value;
-  const maint = +document.getElementById('in-maint').value;
-  const idle = +document.getElementById('in-idle').value;
-  const hours = +document.getElementById('in-hours').value;
-
-  const gross = cars * rate * days;
-  const leakage = (gross * (feesP / 100)) + (cars * rate * idle);
-  const costs = (ins + maint) * cars;
-  const profit = gross - leakage - costs;
-  const hourly = hours > 0 ? profit / (hours * 4.33) : profit;
-  const ctrl = gross > 0 ? Math.max(0, Math.round((profit / gross) * 100)) : 0;
-
-  document.getElementById('out-gross').innerText = '$' + Math.round(gross).toLocaleString();
-  document.getElementById('out-leak').innerText = '-$' + Math.round(leakage).toLocaleString();
-  document.getElementById('out-profit').innerText = '$' + Math.round(profit).toLocaleString();
-  document.getElementById('out-ctrl').innerText = ctrl + '%';
-  document.getElementById('out-hourly').innerText = '$' + hourly.toFixed(2) + '/hr';
-
-  document.getElementById('dynamic-insight').innerText = "If you don’t decide how your operation runs, the friction will decide for you — quietly, every day.";
-  
-  st.res = { gross, profit, hourly };
-  window.go(5);
-};
-
-window.save = async function() {
-  const email = document.getElementById('email').value;
-  if(!email.includes('@')) return alert('valid email please');
-  document.getElementById('h-wrap').classList.remove('blur');
-  try {
-    await fetch(S_URL + '/rest/v1/leads', {
-      method: 'POST',
-      headers: { 'apikey': S_KEY, 'Authorization': 'Bearer ' + S_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, profit: st.res.profit, hourly: st.res.hourly, operator_type: st.mode })
-    });
-    document.getElementById('email-box').innerHTML = `
-      <div class="success-card">
-        <h3 style="color:#16a34a; margin-top:0;">Diagnosis completed</h3>
-        <p style="font-size:14px; color:#475569;">Your data has been processed. Now, let’s plug those leaks and reclaim your control with a professional system.</p>
-        <a href="YOUR_CALENDLY_LINK" target="_blank" style="text-decoration:none;">
-          <button style="background:#16a34a; margin-top:10px;">Book My Free 45-Min Session →</button>
-        </a>
-      </div>
-    `;
-  } catch(e) { alert('Saved.'); }
-};
-</script>
-</body>
-</html>
