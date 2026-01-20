@@ -200,32 +200,35 @@
     </div>
   </div>
 
-  <div class='step' id='s5'>
+ <div class='step' id='s5'>
     <div class='card'>
-      <h1 style='font-size:30px;'>The Reality Check</h1>
-      <div class='res-card'><p class='micro'>Gross monthly revenue</p><div class='res-val' id='out-gross'>$0</div></div>
-      <div class='res-card'><p class='micro'>Total Silent Leakage</p><div class='res-val leak-val' id='out-leak'>-$0</div></div>
-      <div class='res-card' style='border-bottom:none;'><p class='micro'>True monthly profit</p><div class='res-val' style='color:#16a34a;' id='out-profit'>$0</div></div>
+      <h1 style='font-size:22px;'>Here’s What Your Car Rental Business Actually Produces</h1>
+      <p class='subhead'>Based on the numbers you entered — not best-case scenarios.</p>
 
-      <div class='hammer'>You control <span id='out-ctrl' style='color:#2563eb;'>0%</span> of the outcome.</div>
-      
+      <div class='res-card'><p class='micro'>Gross monthly revenue</p><div class='res-val' id='out-gross'>$0</div></div>
+      <div class='res-card'><p class='micro'>Silent leakage</p><div class='res-val leak-val' id='out-leak'>-$0</div><p class='micro'>Platform cuts • idle days • operational friction</p></div>
+      <div class='res-card' style='border-bottom:none;'><p class='micro'>True monthly profit (before paying yourself)</p><div class='res-val' style='color:#16a34a;' id='out-profit'>$0</div></div>
+
+      <div class='hammer'>You’re running a car rental business…<br>but you only control <span id='out-ctrl' style='color:#2563eb;'>0%</span> of the outcome.</div>
+      <p style='font-size:14px; color:#475569; text-align:center;'>The rest is decided by platform rules, downtime, payment friction, and how much manual work the operation needs to stay alive.</p>
+
       <div id='h-wrap' class='blur' style='text-align:center; padding: 20px; background:#f8fafc; border-radius:12px; margin-top:20px;'>
-        <p class='micro'>Effective hourly earnings</p>
+        <p class='micro'>Your effective hourly earnings</p>
         <div id='out-hourly' style='font-size:32px; font-weight:800;'>$0/hr</div>
+        <p class='micro'>Based on the time it takes to keep this running — not just driving revenue.</p>
       </div>
 
-      <div id='dynamic-insight'></div>
+      <div id='dynamic-insight' style='margin-top:25px; font-size:15px; background:#fff7ed; padding:15px; border-radius:8px; border:1px solid #ffedd5; font-weight:500;'></div>
 
       <div id='email-box'>
-        <h3 style="margin-top:0;">Reclaim your control?</h3>
-        <p style="font-size:14px; color:#475569; margin-bottom:15px;">Get the breakdown of where your profit is leaking.</p>
+        <h3>Want to see where this leaks — and what fixes it at your stage?</h3>
+        <p style='font-size:14px;'>I’ll break this down by operator type and show you the systems that reclaim your time and margin.</p>
         <input type='email' id='email' placeholder='Enter your email'>
         <button onclick='window.save()'>Get my free profit breakdown</button>
+        <p class='micro' style='text-align:center;'>One email. No spam. Pure diagnosis.</p>
       </div>
     </div>
   </div>
-
-</div>
 
 <div id="final-popup" onclick="this.style.display='none'">
   <div class="popup-content" onclick="event.stopPropagation()">
