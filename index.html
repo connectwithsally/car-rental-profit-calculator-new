@@ -48,16 +48,26 @@
 
   label { font-weight: 600; font-size: 14px; color: #475569; display: block; margin-top: 16px; }
   
-  /* FORCE UP/DOWN COUNTERS TO BE VISIBLE */
-  input[type=number] {
+  /* FIXED INPUT SIZING FOR ALL FIELDS */
+  input {
     width: 100%;
-    padding: 14px;
-    margin: 8px 0 4px;
+    padding: 16px;
+    margin: 12px 0 8px;
     border: 1px solid #cbd5e1;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 16px;
     box-sizing: border-box;
   }
+
+  /* SLIDER SCALE FIX */
+  input[type=range] {
+    height: 10px;
+    cursor: pointer;
+    background: #e2e8f0;
+    accent-color: #2563eb;
+  }
+
+  /* VISIBLE NUMBER COUNTERS */
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
     -webkit-appearance: inner-spin-button !important;
@@ -66,12 +76,21 @@
 
   .micro { font-size: 12px; color: #94a3b8; margin-top: 4px; }
 
+  /* RESULTS STYLES */
   .res-card { text-align: center; padding: 20px; border-bottom: 1px solid #f1f5f9; }
   .res-val { font-size: 32px; font-weight: 800; color: #0f172a; margin: 8px 0; }
   .leak-val { color: #dc2626; }
   .hammer { font-weight: 700; font-size: 20px; text-align: center; margin: 30px 0 10px; }
   .blur { filter: blur(5px); opacity: 0.3; pointer-events: none; }
-  #email-box { background: #f1f5f9; padding: 20px; border-radius: 12px; margin-top: 20px; }
+  
+  /* LARGE EMAIL BOX FIX */
+  #email-box { 
+    background: #f1f5f9; 
+    padding: 30px; 
+    border-radius: 16px; 
+    margin-top: 25px; 
+    border: 1px solid #e2e8f0;
+  }
   
   .success-card {
     text-align: center;
@@ -82,17 +101,17 @@
     margin-top: 20px;
   }
 
-  /* PINK INSIGHT BOX STYLE */
   #dynamic-insight {
-    margin-top: 25px;
+    margin: 25px 0;
     font-size: 15px;
-    background: #fff1f2; /* Light Pink */
-    padding: 15px;
-    border-radius: 8px;
-    border: 1px solid #fecdd3; /* Pink Border */
+    background: #fff1f2;
+    padding: 18px;
+    border-radius: 10px;
+    border: 1px solid #fecdd3;
     font-weight: 500;
     text-align: center;
-    color: #9f1239; /* Deep Pink Text */
+    color: #9f1239;
+    line-height: 1.4;
   }
 
   /* NARROW POPUP */
@@ -198,7 +217,8 @@
       <div id='dynamic-insight'></div>
 
       <div id='email-box'>
-        <h3>Reclaim your control?</h3>
+        <h3 style="margin-top:0;">Reclaim your control?</h3>
+        <p style="font-size:14px; color:#475569; margin-bottom:15px;">Get the breakdown of where your profit is leaking.</p>
         <input type='email' id='email' placeholder='Enter your email'>
         <button onclick='window.save()'>Get my free profit breakdown</button>
       </div>
@@ -242,7 +262,6 @@ window.setMode = function(m) {
   window.go(1);
 };
 
-// --- CORE FORMULA: NO CHANGES MADE ---
 window.calc = function() {
   const cars   = Math.max(0, +document.getElementById('in-cars').value || 0);
   const rate   = Math.max(0, +document.getElementById('in-rate').value || 0);
@@ -252,7 +271,6 @@ window.calc = function() {
   const maint  = Math.max(0, +document.getElementById('in-maint').value || 0);
   const hours  = Math.max(0, +document.getElementById('in-hours').value || 0);
 
-  const idleDays = 30 - days;
   const gross = cars * rate * days;
   const platformCut = (st.mode === 'platform' || st.mode === 'both') ? gross * (feesP / 100) : 0;
   const fixedCosts = (ins + maint) * cars;
@@ -269,7 +287,6 @@ window.calc = function() {
   document.getElementById('out-ctrl').innerText = ctrl + '%';
   document.getElementById('out-hourly').innerText = '$' + hourly.toFixed(2) + '/hr';
 
-  // UPDATED TEXT CONTENT
   document.getElementById('dynamic-insight').innerText = "If you don't decide how your operation runs, the friction will decide for you — quietly, every day.";
 
   st.res = { gross, profit, hourly };
