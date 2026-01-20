@@ -5,6 +5,7 @@
 <title>Car Rental Profit Reality Check</title>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <style>
+  /* GLOBAL STYLES */
   body {
     background: #f8fafc;
     color: #1e293b;
@@ -58,6 +59,7 @@
   }
   .micro { font-size: 12px; color: #94a3b8; margin-top: 4px; }
 
+  /* RESULTS DISPLAY */
   .res-card { text-align: center; padding: 20px; border-bottom: 1px solid #f1f5f9; }
   .res-val { font-size: 32px; font-weight: 800; color: #0f172a; margin: 8px 0; }
   .leak-val { color: #dc2626; }
@@ -74,7 +76,7 @@
     margin-top: 20px;
   }
 
-  /* NARROW POPUP BOX */
+  /* NARROW POPUP (approx 1 inch / 320px) */
   #final-popup {
     display: none;
     position: fixed;
@@ -87,10 +89,10 @@
   }
   .popup-content {
     background: white;
-    padding: 30px;
+    padding: 25px;
     border-radius: 20px;
     width: 90%;
-    max-width: 320px;
+    max-width: 320px; /* Narrow display fix */
     text-align: center;
     box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
   }
@@ -109,13 +111,12 @@
       <button class='btn-opt' onclick='window.setMode("private")'>I rent privately / direct</button>
       <button class='btn-opt' onclick='window.setMode("both")'>I do both</button>
       <button class='btn-opt' onclick='window.setMode("beginner")'>I’m planning to start</button>
-      <p class='micro' style='text-align:center; margin-top:20px;'>Takes about 60 seconds. No login. No fluff.</p>
     </div>
   </div>
 
   <div class='step' id='s1'>
     <div class='card'>
-      <h2>Basic Numbers</h2>
+      <h2>Operational Basics</h2>
       <label>Number of cars</label>
       <input type='number' id='in-cars' value='1'>
       <label>Average daily price per car</label>
@@ -129,22 +130,21 @@
 
   <div class='step' id='s2'>
     <div class='card' id='dist-platform'>
-      <h2>Platform Cut</h2>
+      <h2>Platform Fees</h2>
       <label>Platform takes: %</label>
       <input type='number' id='in-fees' value='30'>
-      <p class='micro'>Includes host fees and adjustments.</p>
       <button onclick='window.go(3)'>Continue</button>
     </div>
     <div class='card' id='dist-private' style='display:none;'>
-      <h2>Private Booking</h2>
-      <p style="font-size:14px;">We'll calculate profit based on 0% platform fees for private rentals.</p>
+      <h2>Private Setup</h2>
+      <p>Using 0% platform fee logic.</p>
       <button onclick='window.go(3)'>Continue</button>
     </div>
   </div>
 
   <div class='step' id='s3'>
     <div class='card'>
-      <h2>Fixed Monthly Costs</h2>
+      <h2>Fixed Costs</h2>
       <label>Insurance (monthly per car)</label>
       <input type='number' id='in-ins' value='200'>
       <label>Maintenance (monthly per car)</label>
@@ -155,19 +155,19 @@
 
   <div class='step' id='s4'>
     <div class='card'>
-      <h2>Operational Effort</h2>
+      <h2>Admin Time</h2>
       <label>Hours per week spent on admin</label>
       <input type='number' id='in-hours' value='12'>
-      <p class='micro'>messages, check-ins, cleaning, claims</p>
-      <button onclick='window.calc()'>Calculate Reality</button>
+      <p class='micro'>Messages, cleaning, claims, etc.</p>
+      <button onclick='window.calc()'>View Profit Reality</button>
     </div>
   </div>
 
   <div class='step' id='s5'>
     <div class='card'>
-      <h1 style='font-size:22px;'>Profit Analysis</h1>
+      <h1 style='font-size:22px;'>The Reality Check</h1>
       <div class='res-card'><p class='micro'>Gross monthly revenue</p><div class='res-val' id='out-gross'>$0</div></div>
-      <div class='res-card'><p class='micro'>Silent leakage</p><div class='res-val leak-val' id='out-leak'>-$0</div><p class='micro'>Cuts • idle loss • costs • admin time</p></div>
+      <div class='res-card'><p class='micro'>Total Silent Leakage</p><div class='res-val leak-val' id='out-leak'>-$0</div><p class='micro'>Cuts • idle loss • costs • admin time</p></div>
       <div class='res-card' style='border-bottom:none;'><p class='micro'>True monthly profit</p><div class='res-val' style='color:#16a34a;' id='out-profit'>$0</div></div>
 
       <div class='hammer'>You control <span id='out-ctrl' style='color:#2563eb;'>0%</span> of the outcome.</div>
@@ -177,10 +177,10 @@
         <div id='out-hourly' style='font-size:32px; font-weight:800;'>$0/hr</div>
       </div>
 
-      <div id='dynamic-insight' style='margin-top:25px; font-size:15px; background:#fff7ed; padding:15px; border-radius:8px; border:1px solid #ffedd5; font-weight:500;'></div>
+      <div id='dynamic-insight' style='margin-top:25px; font-size:15px; background:#fff7ed; padding:15px; border-radius:8px; border:1px solid #ffedd5; font-weight:500; text-align:center;'></div>
 
       <div id='email-box'>
-        <h3>Reclaim your margin?</h3>
+        <h3>Reclaim your control?</h3>
         <input type='email' id='email' placeholder='Enter your email'>
         <button onclick='window.save()'>Get my free profit breakdown</button>
       </div>
@@ -194,15 +194,14 @@
     <h2 style="color:#0f172a; margin-top:0; font-size:18px;">You’re in. Let’s Fix the Leaks.</h2>
     <p style="font-weight:600; color:#16a34a; font-size:14px;">Your meeting request is confirmed.</p>
     <p style="font-size:13px; color:#475569; line-height:1.5; text-align:left;">
-    You’ll receive a confirmation email shortly.<br><br>
+    You’ll receive a confirmation email shortly with next steps.<br><br>
     This meeting is designed to identify where control is leaking and outline a system to fix it.<br><br>
     <strong>Watch your inbox.</strong></p>
-    <button onclick="document.getElementById('final-popup').style.display='none'" style="background:#0f172a; padding:12px; font-size:14px;">Close</button>
+    <button onclick="document.getElementById('final-popup').style.display='none'" style="background:#0f172a; padding:12px; font-size:14px; margin-top:10px;">Close</button>
   </div>
 </div>
 
 <script>
-// SUPABASE CONFIG - Using your provided keys
 const S_URL = 'https://mfuoltkdoocdpurqytzt.supabase.co';
 const S_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1mdW9sdGtkb29jZHB1cnF5dHp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MDQ3ODAsImV4cCI6MjA4NDA4MDc4MH0.MVTJr-CJUuuOxqeiLJ0F9tGeXP89krdxiWMdl6Ux6GA';
 let st = { mode: 'platform' };
@@ -225,27 +224,37 @@ window.setMode = function(m) {
   window.go(1);
 };
 
+// --- YOUR FINAL DROP-IN CALCULATION LOGIC ---
 window.calc = function() {
-  const cars = Math.max(0, +document.getElementById('in-cars').value || 0);
-  const rate = Math.max(0, +document.getElementById('in-rate').value || 0);
-  const days = Math.min(30, Math.max(0, +document.getElementById('in-days').value || 0));
-  const feesP = Math.max(0, +document.getElementById('in-fees').value || 0);
-  const ins = Math.max(0, +document.getElementById('in-ins').value || 0);
-  const maint = Math.max(0, +document.getElementById('in-maint').value || 0);
-  const hours = Math.max(0, +document.getElementById('in-hours').value || 0);
+  const cars   = Math.max(0, +document.getElementById('in-cars').value || 0);
+  const rate   = Math.max(0, +document.getElementById('in-rate').value || 0);
+  const days   = Math.min(30, Math.max(0, +document.getElementById('in-days').value || 0));
+  const feesP  = Math.max(0, +document.getElementById('in-fees').value || 0);
+  const ins    = Math.max(0, +document.getElementById('in-ins').value || 0);
+  const maint  = Math.max(0, +document.getElementById('in-maint').value || 0);
+  const hours  = Math.max(0, +document.getElementById('in-hours').value || 0);
 
-  // YOUR NEW LOCKED LOGIC
-  const idleDays = Math.max(0, 30 - days);
+  // LOCKED IDLE DAYS (context only, NOT a cost)
+  const idleDays = 30 - days;
+
+  // GROSS (only booked days)
   const gross = cars * rate * days;
 
+  // REAL COSTS ONLY
   const platformCut = (st.mode === 'platform' || st.mode === 'both') ? gross * (feesP / 100) : 0;
-  const idleLoss = cars * rate * idleDays;
   const fixedCosts = (ins + maint) * cars;
-  const adminCost = hours * 4 * 20; // $20/hr baseline
+  const adminCost  = hours * 4 * 20; // 4 weeks, $20/hr baseline
 
-  const silentLeakage = platformCut + idleLoss + fixedCosts + adminCost;
-  const profit = gross - platformCut - fixedCosts - adminCost;
+  // TOTAL LEAKAGE (cash leaving)
+  const silentLeakage = platformCut + fixedCosts + adminCost;
+
+  // PROFIT
+  const profit = gross - silentLeakage;
+
+  // HOURLY REALITY
   const hourly = hours > 0 ? profit / (hours * 4) : profit;
+
+  // CONTROL %
   const ctrl = gross > 0 ? Math.max(0, Math.round((profit / gross) * 100)) : 0;
 
   // UI UPDATE
@@ -254,19 +263,22 @@ window.calc = function() {
   document.getElementById('out-profit').innerText = '$' + Math.round(profit).toLocaleString();
   document.getElementById('out-ctrl').innerText = ctrl + '%';
   document.getElementById('out-hourly').innerText = '$' + hourly.toFixed(2) + '/hr';
-  document.getElementById('dynamic-insight').innerText = "If you don’t design the system, friction designs it for you — silently.";
+
+  document.getElementById('dynamic-insight').innerText = 
+    idleDays > 10 ? "Idle days cap your upside — but costs are what kill profit." : "Even with solid utilization, leakage is doing damage.";
 
   st.res = { gross, profit, hourly };
   window.go(5);
 };
 
+// --- SAVE TO SUPABASE & TRIGGER NARROW POPUP ---
 window.save = async function() {
   const email = document.getElementById('email').value;
-  if(!email.includes('@')) return alert('Valid email please');
+  if(!email.includes('@')) return alert('Please enter a valid email.');
   document.getElementById('h-wrap').classList.remove('blur');
   
   try {
-    const response = await fetch(S_URL + '/rest/v1/leads', {
+    await fetch(S_URL + '/rest/v1/leads', {
       method: 'POST',
       headers: { 
         'apikey': S_KEY, 
@@ -289,7 +301,12 @@ window.save = async function() {
       </div>
     `;
   } catch(e) {
-    alert('Connected.'); // Fallback if blockered by adblockers
+    // If Supabase is blocked, we still let them proceed to the meeting
+    document.getElementById('email-box').innerHTML = `
+      <div class="success-card">
+        <button onclick="document.getElementById('final-popup').style.display='flex'" style="background:#16a34a; margin-top:10px; font-size:14px;">Schedule My Free 45-Min Strategy Meeting →</button>
+      </div>
+    `;
   }
 };
 </script>
