@@ -5,96 +5,90 @@
 <title>Car Rental Profit Reality Check</title>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <style>
+  /* --- BASE STYLES --- */
   body {
     background: #f8fafc;
     color: #1e293b;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     margin: 0;
     display: flex;
     justify-content: center;
     min-height: 100vh;
-    -webkit-font-smoothing: antialiased; /* Makes fonts look sharper */
   }
-  .container { width: 100%; max-width: 500px; padding: 20px; }
+  .container { width: 100%; max-width: 580px; padding: 20px; box-sizing: border-box; }
   .step { display: none; animation: fadeIn 0.4s ease; }
   .step.active { display: block; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
   
-  /* PRETTIER CARD STYLING */
   .card {
     background: white;
-    border-radius: 20px; /* Softer corners */
+    border-radius: 16px;
     padding: 32px;
     margin-bottom: 20px;
     border: 1px solid #e2e8f0;
-    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); /* Premium soft shadow */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
   }
   
-  h1 { font-size: 24px; margin-bottom: 8px; text-align: center; color: #0f172a; letter-spacing: -0.5px; }
-  .subhead { text-align: center; color: #64748b; margin-bottom: 24px; font-size: 15px; line-height: 1.5; }
+  h1 { font-size: 26px; margin-bottom: 8px; text-align: center; color: #0f172a; line-height: 1.2; }
+  .subhead { text-align: center; color: #64748b; margin-bottom: 24px; font-size: 16px; }
   
-  /* BETTER BUTTONS */
   button {
     width: 100%;
-    padding: 16px;
-    margin-top: 16px;
+    padding: 18px;
+    margin-top: 12px;
     background: #2563eb;
     color: white;
     border: none;
     font-size: 16px;
     font-weight: 600;
-    border-radius: 12px;
+    border-radius: 10px;
     cursor: pointer;
-    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
-    transition: transform 0.1s ease;
+    -webkit-appearance: none; /* Fix for iOS buttons */
   }
-  button:active { transform: scale(0.98); }
-
-  .btn-opt { 
-    background: #fff; 
-    color: #334155; 
-    border: 1px solid #cbd5e1; /* Thinner, cleaner border */
-    text-align: left; 
-    box-shadow: none;
-    padding: 18px;
-  }
+  .btn-opt { background: #fff; color: #334155; border: 2px solid #e2e8f0; text-align: left; }
   .btn-opt:hover { border-color: #2563eb; background: #f8faff; }
 
-  label { font-weight: 600; font-size: 14px; color: #334155; display: block; margin-top: 20px; }
+  label { font-weight: 600; font-size: 14px; color: #475569; display: block; margin-top: 16px; }
   
   input {
     width: 100%;
-    padding: 14px; /* Slightly tighter */
-    margin: 8px 0 4px;
+    padding: 16px;
+    margin: 12px 0 8px;
     border: 1px solid #cbd5e1;
     border-radius: 10px;
     font-size: 16px;
     box-sizing: border-box;
-    background: #fdfdfd;
+    -webkit-appearance: none; /* Fix for iOS inputs */
   }
-  input:focus { outline: none; border-color: #2563eb; ring: 2px solid #bfdbfe; }
 
-  input[type=range] { height: 6px; cursor: pointer; background: #e2e8f0; accent-color: #2563eb; border-radius: 10px; border:none; margin-top: 15px;}
+  input[type=range] {
+    height: 10px;
+    cursor: pointer;
+    background: #e2e8f0;
+    accent-color: #2563eb;
+    margin-top: 20px;
+    -webkit-appearance: slider-horizontal; /* Restore slider on iOS */
+  }
 
-  /* FORCE VISIBLE SPINNERS */
+  /* VISIBLE NUMBER COUNTERS */
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
     -webkit-appearance: inner-spin-button !important;
     opacity: 1 !important;
   }
 
-  .micro { font-size: 12px; color: #94a3b8; margin-top: 6px; }
+  .micro { font-size: 12px; color: #94a3b8; margin-top: 4px; }
 
   /* RESULTS STYLES */
-  .res-card { text-align: center; padding: 16px; border-bottom: 1px solid #f1f5f9; }
-  .res-val { font-size: 28px; font-weight: 800; color: #0f172a; margin: 4px 0; letter-spacing: -1px; }
-  .leak-val { color: #ef4444; }
-  .hammer { font-weight: 700; font-size: 18px; text-align: center; margin: 30px 0 10px; line-height: 1.4; }
+  .res-card { text-align: center; padding: 20px; border-bottom: 1px solid #f1f5f9; }
+  .res-val { font-size: 32px; font-weight: 800; color: #0f172a; margin: 8px 0; }
+  .leak-val { color: #dc2626; }
+  .hammer { font-weight: 700; font-size: 20px; text-align: center; margin: 30px 0 10px; line-height: 1.4; }
   .blur { filter: blur(5px); opacity: 0.3; pointer-events: none; }
   
   #email-box { 
-    background: #f8fafc; 
-    padding: 24px; 
+    background: #f1f5f9; 
+    padding: 30px; 
     border-radius: 16px; 
     margin-top: 25px; 
     border: 1px solid #e2e8f0;
@@ -119,56 +113,51 @@
     font-weight: 500;
     text-align: center;
     color: #9f1239;
-    line-height: 1.5;
+    line-height: 1.4;
   }
 
-  /* --- FIXED POPUP STYLING (PREVENTS CUT OFF) --- */
+  /* --- FIXED POPUP STYLES --- */
+  /* This setup allows the popup to scroll if it is taller than the screen */
   #final-popup {
-    display: none;
+    display: none; /* JS toggles this to 'flex' */
     position: fixed;
-    top: 0; left: 0; 
-    width: 100%; height: 100%;
-    background: rgba(15, 23, 42, 0.95); /* Slightly darker for focus */
-    z-index: 1000;
-    /* CHANGED: This allows scrolling if popup is too tall */
-    overflow-y: auto; 
-    padding: 20px 10px;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.95);
+    z-index: 9999;
+    padding: 10px;
     box-sizing: border-box;
-    /* Flex settings to center, but safe for mobile */
-    display: none; /* Controlled by JS */
-    align-items: flex-start; /* Starts at top to prevent cut-off */
+    
+    /* These lines fix the cut-off issue */
+    overflow-y: auto; 
+    align-items: flex-start; /* Starts at top, allows scroll */
     justify-content: center;
   }
   
-  /* Helper to center vertically only if space permits */
-  #final-popup.flex-center {
-     display: flex;
-     padding-top: 10vh; /* Push down slightly */
-  }
-
   .popup-content {
     background: white;
-    padding: 30px 24px;
+    padding: 30px;
     border-radius: 20px;
     width: 100%;
     max-width: 340px;
     text-align: center;
-    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
     position: relative;
-    margin: auto; /* Helps centering */
-  }
-
-  /* --- MOBILE POLISH (MAKES IT LOOK GOOD ON PHONES) --- */
-  @media (max-width: 480px) {
-    .container { padding: 12px; } /* Less outer padding */
-    .card { padding: 20px; border-radius: 16px; } /* Less inner padding */
-    h1 { font-size: 22px; }
-    .res-val { font-size: 26px; }
     
-    /* Ensure popup has room on small screens */
-    #final-popup.flex-center { padding-top: 40px; }
+    /* This centers it vertically if there is room, but respects scroll if not */
+    margin: auto; 
   }
 
+  /* --- MOBILE OPTIMIZATIONS --- */
+  @media (max-width: 480px) {
+    .container { padding: 15px; }
+    .card { padding: 20px; } /* Reduced padding prevents 'ugly' cramped look */
+    .res-val { font-size: 28px; }
+    h1 { font-size: 24px; }
+    #email-box { padding: 20px; }
+    
+    /* Ensure popup has space on small phones */
+    .popup-content { padding: 25px 20px; max-width: 100%; }
+  }
 </style>
 </head>
 <body>
@@ -177,9 +166,9 @@
 
   <div class='step active' id='s0'>
     <div class='card'>
-      <h1>Car Rental Profit Check</h1>
+      <h1>Car Rental Profit Reality Check</h1>
       <p class='subhead'>See what one car actually earns — after the silent leaks.</p>
-      <p style='font-weight:600; margin-bottom:12px; font-size:14px; color:#475569;'>How do you rent cars today?</p>
+      <p style='font-weight:600; margin-bottom:12px;'>How do you rent cars today?</p>
       <button class='btn-opt' onclick='window.setMode("platform")'>I rent on a platform (Turo, etc.)</button>
       <button class='btn-opt' onclick='window.setMode("private")'>I rent privately / direct</button>
       <button class='btn-opt' onclick='window.setMode("both")'>I do both</button>
@@ -196,7 +185,7 @@
       <input type='number' id='in-rate' value='75'>
       <label>Average booked days per month</label>
       <input type='range' id='in-days' min='0' max='30' value='15' oninput='document.getElementById("d-val").innerText = this.value'>
-      <div style='display:flex; justify-content:space-between; margin-top:5px;'><span class='micro'>0 days</span><span style='font-weight:bold; color:#2563eb; font-size:14px;' id='d-val'>15</span><span class='micro'>30 days</span></div>
+      <div style='display:flex; justify-content:space-between;'><span class='micro'>0 days</span><span style='font-weight:bold; color:#2563eb;' id='d-val'>15</span><span class='micro'>30 days</span></div>
       <button onclick='window.go(2)'>Continue</button>
     </div>
   </div>
@@ -210,7 +199,7 @@
     </div>
     <div class='card' id='dist-private' style='display:none;'>
       <h2>Private Setup</h2>
-      <p style="text-align:center; color:#64748b;">Using 0% platform fee logic.</p>
+      <p>Using 0% platform fee logic.</p>
       <button onclick='window.go(3)'>Continue</button>
     </div>
   </div>
@@ -237,136 +226,35 @@
 
  <div class='step' id='s5'>
     <div class='card'>
-      <h1 style='font-size:22px;'>The Reality Check</h1>
-      
-      <div class='res-card'><p class='micro'>Gross monthly revenue</p><div class='res-val' id='out-gross'>$0</div></div>
-      <div class='res-card'><p class='micro'>Silent Leakage</p><div class='res-val leak-val' id='out-leak'>-$0</div><p class='micro' style='color:#94a3b8;'>Fees • Idle Days • Friction</p></div>
-      <div class='res-card' style='border-bottom:none;'><p class='micro'>True monthly profit</p><div class='res-val' style='color:#16a34a;' id='out-profit'>$0</div></div>
+      <h1 style='font-size:22px;'>Here’s What Your Car Rental Business Actually Produces</h1>
+      <p class='subhead'>Based on the numbers you entered — not best-case scenarios.</p>
 
-      <div class='hammer'>You control <span id='out-ctrl' style='color:#2563eb;'>0%</span> of the outcome.</div>
-      
-      <div id='h-wrap' class='blur' style='text-align:center; padding: 15px; background:#f1f5f9; border-radius:12px; margin-top:20px;'>
-        <p class='micro'>Effective hourly earnings</p>
-        <div id='out-hourly' style='font-size:28px; font-weight:800; color:#475569;'>$0/hr</div>
+      <div class='res-card'><p class='micro'>Gross monthly revenue</p><div class='res-val' id='out-gross'>$0</div></div>
+      <div class='res-card'><p class='micro'>Silent leakage</p><div class='res-val leak-val' id='out-leak'>-$0</div><p class='micro'>Platform cuts • idle days • operational friction</p></div>
+      <div class='res-card' style='border-bottom:none;'><p class='micro'>True monthly profit (before paying yourself)</p><div class='res-val' style='color:#16a34a;' id='out-profit'>$0</div></div>
+
+      <div class='hammer'>You’re running a car rental business…<br>but you only control <span id='out-ctrl' style='color:#2563eb;'>0%</span> of the outcome.</div>
+      <p style='font-size:14px; color:#475569; text-align:center;'>The rest is decided by platform rules, downtime, payment friction, and how much manual work the operation needs to stay alive.</p>
+
+      <div id='h-wrap' class='blur' style='text-align:center; padding: 20px; background:#f8fafc; border-radius:12px; margin-top:20px;'>
+        <p class='micro'>Your effective hourly earnings</p>
+        <div id='out-hourly' style='font-size:32px; font-weight:800;'>$0/hr</div>
+        <p class='micro'>Based on the time it takes to keep this running — not just driving revenue.</p>
       </div>
 
-      <div id='dynamic-insight'></div>
+      <div id='dynamic-insight' style='margin-top:25px; font-size:15px; background:#fff7ed; padding:15px; border-radius:8px; border:1px solid #ffedd5; font-weight:500;'></div>
 
       <div id='email-box'>
-        <h3 style="margin-top:0; font-size:18px;">Stop the leaks?</h3>
-        <p style='font-size:14px; color:#475569; margin-bottom:15px;'>See the system that fixes this.</p>
+        <h3>Want to see where this leaks — and what fixes it at your stage?</h3>
+        <p style='font-size:14px;'>I’ll break this down by operator type and show you the systems that reclaim your time and margin.</p>
         <input type='email' id='email' placeholder='Enter your email'>
         <button onclick='window.save()'>Get my free profit breakdown</button>
+        <p class='micro' style='text-align:center;'>One email. No spam. Pure diagnosis.</p>
       </div>
     </div>
   </div>
 
 <div id="final-popup" onclick="this.style.display='none'">
   <div class="popup-content" onclick="event.stopPropagation()">
-    <h2 style="color:#0f172a; margin-top:0; font-size:20px;">You’re in. Let’s Fix the Leaks.</h2>
-    <p style="font-weight:600; color:#16a34a; font-size:14px; margin-bottom:20px;">Meeting request confirmed.</p>
-    
-    <div style="text-align:left; background:#f8fafc; padding:15px; border-radius:10px; margin-bottom:20px;">
-        <p style="font-size:13px; color:#475569; line-height:1.6; margin:0;">
-        You’ll receive a confirmation email shortly.<br><br>
-        This meeting identifies where control is leaking and outlines the system to fix it.<br><br>
-        <strong>Watch your inbox.</strong></p>
-    </div>
-    
-    <button onclick="document.getElementById('final-popup').style.display='none'" style="background:#0f172a; padding:14px; font-size:14px; margin-top:0;">Close</button>
-  </div>
-</div>
-
-<script>
-const S_URL = 'https://mfuoltkdoocdpurqytzt.supabase.co';
-const S_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1mdW9sdGtkb29jZHB1cnF5dHp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MDQ3ODAsImV4cCI6MjA4NDA4MDc4MH0.MVTJr-CJUuuOxqeiLJ0F9tGeXP89krdxiWMdl6Ux6GA';
-let st = { mode: 'platform' };
-
-window.go = function(n) {
-  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-  document.getElementById('s' + n).classList.add('active');
-  window.scrollTo(0,0);
-  
-  // MESSAGE TO PARENT (Landing Page) to Scroll Up
-  if(window.parent) {
-     window.parent.postMessage('scroll-to-top', '*');
-  }
-};
-
-window.setMode = function(m) {
-  st.mode = m;
-  if(m === 'private') {
-    document.getElementById('dist-platform').style.display = 'none';
-    document.getElementById('dist-private').style.display = 'block';
-  } else {
-    document.getElementById('dist-platform').style.display = 'block';
-    document.getElementById('dist-private').style.display = 'none';
-  }
-  window.go(1);
-};
-
-window.calc = function() {
-  const cars   = Math.max(0, +document.getElementById('in-cars').value || 0);
-  const rate   = Math.max(0, +document.getElementById('in-rate').value || 0);
-  const days   = Math.min(30, Math.max(0, +document.getElementById('in-days').value || 0));
-  const feesP  = Math.max(0, +document.getElementById('in-fees').value || 0);
-  const ins    = Math.max(0, +document.getElementById('in-ins').value || 0);
-  const maint  = Math.max(0, +document.getElementById('in-maint').value || 0);
-  const hours  = Math.max(0, +document.getElementById('in-hours').value || 0);
-
-  const gross = cars * rate * days;
-  const platformCut = (st.mode === 'platform' || st.mode === 'both') ? gross * (feesP / 100) : 0;
-  const fixedCosts = (ins + maint) * cars;
-  const adminCost  = hours * 4 * 20; 
-
-  const silentLeakage = platformCut + fixedCosts + adminCost;
-  const profit = gross - silentLeakage;
-  const hourly = hours > 0 ? profit / (hours * 4) : profit;
-  const ctrl = gross > 0 ? Math.max(0, Math.round((profit / gross) * 100)) : 0;
-
-  document.getElementById('out-gross').innerText = '$' + Math.round(gross).toLocaleString();
-  document.getElementById('out-leak').innerText = '-$' + Math.round(silentLeakage).toLocaleString();
-  document.getElementById('out-profit').innerText = '$' + Math.round(profit).toLocaleString();
-  document.getElementById('out-ctrl').innerText = ctrl + '%';
-  document.getElementById('out-hourly').innerText = '$' + hourly.toFixed(2) + '/hr';
-
-  document.getElementById('dynamic-insight').innerText = "If you don't decide how your operation runs, the friction will decide for you — quietly, every day.";
-
-  st.res = { gross, profit, hourly };
-  window.go(5);
-};
-
-window.save = async function() {
-  const email = document.getElementById('email').value;
-  if(!email.includes('@')) return alert('Please enter a valid email.');
-  document.getElementById('h-wrap').classList.remove('blur');
-  
-  try {
-    await fetch(S_URL + '/rest/v1/leads', {
-      method: 'POST',
-      headers: { 'apikey': S_KEY, 'Authorization': 'Bearer ' + S_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
-      body: JSON.stringify({ email, profit: st.res.profit, hourly: st.res.hourly, operator_type: st.mode })
-    });
-    
-    // SHOW POPUP SAFELY
-    const pop = document.getElementById('final-popup');
-    pop.classList.add('flex-center'); // Trigger the flex display
-    
-    document.getElementById('email-box').innerHTML = `
-      <div class="success-card">
-        <h3 style="color:#16a34a; margin:0; font-size:16px;">Diagnosis Sent</h3>
-        <button onclick="document.getElementById('final-popup').className='flex-center'" style="background:#16a34a; margin-top:10px; font-size:14px;">Schedule Strategy Meeting →</button>
-      </div>
-    `;
-  } catch(e) {
-    // Error Fallback
-     document.getElementById('email-box').innerHTML = `
-      <div class="success-card">
-        <button onclick="document.getElementById('final-popup').className='flex-center'" style="background:#16a34a; margin-top:10px; font-size:14px;">Schedule Strategy Meeting →</button>
-      </div>
-    `;
-  }
-};
-</script>
-</body>
-</html>
+    <h2 style="color:#0f172a; margin-top:0; font-size:18px;">You’re in. Let’s Fix the Leaks.</h2>
+    <p style="font-weight:600; color:#16a3
